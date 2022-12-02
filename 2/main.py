@@ -17,25 +17,15 @@ def to_tool(char: str):
     if char in ['C', 'Z']:
         return SCISSORS
 
+nemesis_map = {ROCK: PAPER, PAPER: SCISSORS, SCISSORS: ROCK}
 
 def battle(p1, p2) -> int:
     if p1 == p2:
+        return 0
+    if p1 == nemesis_map[p2]:
+        return -1
+    else:
         return 1
-    if p1 == ROCK:
-        if p2 == PAPER:
-            return 2
-        else:
-            return 0
-    if p1 == PAPER:
-        if p2 == SCISSORS:
-            return 2
-        else:
-            return 0
-    if p1 == SCISSORS:
-        if p2 == ROCK:
-            return 2
-        else:
-            return 0
 
 def tool_score(tool):
     if tool == ROCK:
@@ -47,10 +37,9 @@ def tool_score(tool):
 
 
 def play(opponent: str, me:str):
-    score = tool_score(me) + battle(opponent, me) * 3
+    score = tool_score(me) + (battle(opponent, me)+1) * 3
     return score
 
-nemesis_map = {ROCK: PAPER, PAPER: SCISSORS, SCISSORS: ROCK}
 
 def find_tool(opponent: str, outcome:str):
     if outcome == DRAW:
@@ -63,7 +52,7 @@ def find_tool(opponent: str, outcome:str):
 
 def play2(opponent: str, outcome:str):
     my_tool = find_tool(opponent, outcome)
-    score = tool_score(my_tool) + battle(opponent, my_tool) * 3
+    score = tool_score(my_tool) + (battle(opponent, my_tool)+1) * 3
     return score
 
 
