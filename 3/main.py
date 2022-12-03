@@ -5,6 +5,8 @@ f = open("3/input.txt")
 
 def get_score(c: str) -> int:
     score = ord(c)
+    print(c)
+    print(score)
     if score <= 90: # uppercase
         score += -64 + 26
     else:
@@ -42,14 +44,15 @@ for first_bag in lines:
     calc_first(second_bag)
     third_bag = next(lines)
     calc_first(third_bag)
-    badge = find_commons(find_commons(first_bag, second_bag), third_bag).strip()
-    badge_findings.append(get_score(badge))
+    #badge = find_commons(find_commons(first_bag, second_bag), third_bag).strip()
+    #badge_findings.append(get_score(badge))
 
 
 
 
 print(repeated_findings)
 print(sum(repeated_findings))
+print(len(repeated_findings))
 print(badge_findings)
 print(sum(badge_findings))
 
