@@ -1,14 +1,4 @@
 from collections import defaultdict
-def bitshift(section):
-    start, finish = section.split('-')
-    size = int(finish) - int(start) + 1
-    size_mask = 0
-    for n in range(size):
-        size_mask |= 1 << n + 1
-    result = size_mask << (int(start))
-    result = result >> 2
-    # todo, find out why it's shifted too much
-    return result
 
 
 f = open("5/input.txt")
