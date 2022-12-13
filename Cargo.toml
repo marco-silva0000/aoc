@@ -1,4 +1,4 @@
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [workspace]
-members = ["1", "2", "3", "4", "5", "6"]
+members = ["1", "2", "3", "4", "5", "6", "7"]
 
