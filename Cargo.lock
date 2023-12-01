@@ -15,12 +15,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "aoc22_19"
+version = "0.1.0"
+dependencies = [
+ "pathfinding",
+]
+
+[[package]]
 name = "aoc22_2"
 version = "0.1.0"
 
 [[package]]
 name = "aoc22_3"
 version = "0.1.0"
+dependencies = [
+ "itertools",
+]
 
 [[package]]
 name = "aoc22_4"

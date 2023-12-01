@@ -91,13 +91,8 @@ class Piece():
         if not is_coliding(tentative_shape, list(grid.keys())):
             self.shape = tentative_shape
 
-    @property
-    def min_x(self):
-        return min(self.shape, key=lambda x: x[0])[0]
-
-
     def __eq__(self, other) -> bool:
-        return type(self) == type(other) and self.min_x == other.min_x and self.settle_time == other.settle_time and self.shifts == other.shifts
+        return type(self) == type(other) and self.settle_time == other.settle_time and self.shifts == other.shifts
 
     def __str__(self) -> str:
         return f"{type(self)}({self.shape})"
@@ -312,7 +307,7 @@ print_for_x = 0
 while n_pieces < total_rocks: 
     if n_pieces % 20 == 0:
         print(f"{n_pieces}/total_rocks={n_pieces/total_rocks*100}%")
-    if not pattern_found and n_pieces / 1000 == 1.0:
+    if not pattern_found and n_pieces / 3500 == 1.0:
         pattern_height, pattern_offset, result_slice = find_pattern(grid, last_pieces)
         next_piece = last_pieces[pattern_offset]
         prev_piece = last_pieces[pattern_offset-1]

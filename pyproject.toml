@@ -7,6 +7,8 @@ authors = ["Marco Silva <mail@marco-silva.com>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 black = "^22.10.0"
+sympy = "^1.11.1"
+defaultlist = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
 

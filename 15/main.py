@@ -306,3 +306,11 @@ print('Result: ', final_result)
 
 
 
+        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+            processes = []
+            for child in children:
+                processes.append(executor.submit(process_child, child))
+            for _ in concurrent.futures.as_completed(processes):
+                result = _.result()
+                if result:
+                    heapq.heappush(open_list, result)

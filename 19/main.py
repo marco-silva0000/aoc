@@ -6,7 +6,7 @@ from itertools import cycle, islice, chain
 
 
 class Material(str, Enum):
-    EMPTY = '🌫️'
+    EMPTY = "🌫️"
     ROCK = "🗿"
     PIECE = "🔽"
     WALL = "🧱"
@@ -19,6 +19,7 @@ class Material(str, Enum):
     FIRE = "🔥"
     AIR = "🛩️"
     BUBBLE = "🫧"
+
 
 Point = Tuple[int, int, int]
 
@@ -109,7 +110,7 @@ Point = Tuple[int, int, int]
 
 #         self.material = self.settle_material
 
-#     def __lshift__(self, reference) -> List[Point]: 
+#     def __lshift__(self, reference) -> List[Point]:
 #         if type(reference) == int:
 #             result = self.shape
 #             for _ in range(reference):
@@ -122,16 +123,16 @@ Point = Tuple[int, int, int]
 #             return result
 #         raise TypeError
 
-#     def __irshift__(self, reference) -> List[Point]: 
+#     def __irshift__(self, reference) -> List[Point]:
 #         self.shape = self >> reference
 #         return self.shape
 
-#     def __ilshift__(self, reference) -> List[Point]: 
+#     def __ilshift__(self, reference) -> List[Point]:
 #         self.shape = self << reference
 #         return self.shape
 
 
-#     def __rshift__(self, reference) -> List[Point]: 
+#     def __rshift__(self, reference) -> List[Point]:
 #         if type(reference) == int:
 #             result = self.shape
 #             for _ in range(reference):
@@ -159,7 +160,6 @@ Point = Tuple[int, int, int]
 #                 result = up_shift(result)
 #             return result
 #         raise TypeError
-
 
 
 # class Line(Piece):
@@ -219,15 +219,15 @@ Point = Tuple[int, int, int]
 #     print("")
 
 
-
 f = open("18/test.txt")
-grid: Dict[Point, int] =  dict()
+grid: Dict[Point, int] = dict()
 for line in f.readlines():
     line = line.strip()
     x, y, z = line.split(",")
     x, y, z = (int(x), int(y), int(z))
-    grid[x,y,z] = 1
+    grid[x, y, z] = 1
 f.close()
+
 
 def sliding_window(iterable, n):
     # sliding_window('ABCDEFG', 4) --> ABCD BCDE CDEF DEFG
@@ -239,6 +239,7 @@ def sliding_window(iterable, n):
         window.append(x)
         yield tuple(window)
 
+
 def is_touching(one: Tuple[int, int, int], other: Tuple[int, int, int]) -> bool:
     x, y, z = one
     xx, yy, zz = other
@@ -246,8 +247,7 @@ def is_touching(one: Tuple[int, int, int], other: Tuple[int, int, int]) -> bool:
     dy = abs(yy - y)
     dz = abs(zz - z)
 
-
-    return dx + dy + dz == 1 
+    return dx + dy + dz == 1
 
 
 print(grid.keys())
@@ -257,15 +257,18 @@ print(grid.keys())
 X = 0
 Y = 1
 Z = 1
+
+
 def get_neighbor_faces(cube: Tuple[int, int, int]):
     x, y, z = cube
-    north = (x, y+1, z)
-    south = (x, y-1, z)
-    east = (x+1, y, z)
-    west = (x-1, y, z)
-    top = (x, y, z+1)
-    bottom = (x, y, z-1)
+    north = (x, y + 1, z)
+    south = (x, y - 1, z)
+    east = (x + 1, y, z)
+    west = (x - 1, y, z)
+    top = (x, y, z + 1)
+    bottom = (x, y, z - 1)
     return [north, south, east, west, top, bottom]
+
 
 result = 0
 keys = list(grid.keys())
@@ -279,6 +282,7 @@ for cube in keys:
 
 
 print(result)
+
 
 def print_face(points, min_x=None, max_x=None, min_y=None, max_y=None):
     x_points = list(set([x for x, _ in points]))
@@ -304,7 +308,10 @@ def print_face(points, min_x=None, max_x=None, min_y=None, max_y=None):
         print("")
     print("")
 
-def print_face(points, out_cubes, air_cubes, out_air_cubes, min_x=0, max_x=10, min_y=0, max_y=10):
+
+def print_face(
+    points, out_cubes, air_cubes, out_air_cubes, min_x=0, max_x=10, min_y=0, max_y=10
+):
     for y in range(max_y, min_y - 1, -1):
         print(f"{y:03}:", end="")
         for x in range(min_x, max_x):
@@ -322,7 +329,16 @@ def print_face(points, out_cubes, air_cubes, out_air_cubes, min_x=0, max_x=10, m
     print("")
 
 
-def print_faces(points, out_cubes, air_cubes, out_air_cubes, min_x=None, max_x=None, min_y=None, max_y=None):
+def print_faces(
+    points,
+    out_cubes,
+    air_cubes,
+    out_air_cubes,
+    min_x=None,
+    max_x=None,
+    min_y=None,
+    max_y=None,
+):
     x_points = list(set([x for x, _, _ in points]))
     x_points.sort()
     y_points = list(set([y for _, y, _ in points]))
@@ -345,90 +361,198 @@ def print_faces(points, out_cubes, air_cubes, out_air_cubes, min_x=None, max_x=N
     temp_out = []
     temp_air = []
     temp_out_air = []
-    for z in range(max_z+1, min_z-2, -1):
-        for x in range(min_x-2, max_x+2):
-            for y in range(min_y-2, max_y+2):
-                if (x, y, z) in points and (x, y) not in temp_points: # first time this x,y appears
-                    temp_points.append((x,y))
-                if (x, y, z) in out_cubes and (x, y) not in temp_out: # first time this x,y appears
-                    temp_out.append((x,y))
-                if (x, y, z) in air_cubes and (x, y) not in temp_air: # first time this x,y appears
-                    temp_air.append((x,y))
-                if (x, y, z) in out_air_cubes and (x, y) not in temp_out_air: # first time this x,y appears
-                    temp_out_air.append((x,y))
-    for z in range(min_z-2, max_z+2):
-        for x in range(min_x-2, max_x+2):
-            for y in range(min_y-2, max_y+2):
-                if (x, y, z) in points and (x, y) not in temp_points: # first time this x,y appears
-                    temp_points.append((x,y))
-                if (x, y, z) in out_cubes and (x, y) not in temp_out: # first time this x,y appears
-                    temp_out.append((x,y))
-                if (x, y, z) in air_cubes and (x, y) not in temp_air: # first time this x,y appears
-                    temp_air.append((x,y))
-                if (x, y, z) in out_air_cubes and (x, y) not in temp_out_air: # first time this x,y appears
-                    temp_out_air.append((x,y))
-    print_face(temp_points, temp_out, temp_air, temp_out_air, min_x=min_x-2, max_x=max_x+3, min_y=min_y-2, max_y=max_y+2)
+    for z in range(max_z + 1, min_z - 2, -1):
+        for x in range(min_x - 2, max_x + 2):
+            for y in range(min_y - 2, max_y + 2):
+                if (x, y, z) in points and (
+                    x,
+                    y,
+                ) not in temp_points:  # first time this x,y appears
+                    temp_points.append((x, y))
+                if (x, y, z) in out_cubes and (
+                    x,
+                    y,
+                ) not in temp_out:  # first time this x,y appears
+                    temp_out.append((x, y))
+                if (x, y, z) in air_cubes and (
+                    x,
+                    y,
+                ) not in temp_air:  # first time this x,y appears
+                    temp_air.append((x, y))
+                if (x, y, z) in out_air_cubes and (
+                    x,
+                    y,
+                ) not in temp_out_air:  # first time this x,y appears
+                    temp_out_air.append((x, y))
+    for z in range(min_z - 2, max_z + 2):
+        for x in range(min_x - 2, max_x + 2):
+            for y in range(min_y - 2, max_y + 2):
+                if (x, y, z) in points and (
+                    x,
+                    y,
+                ) not in temp_points:  # first time this x,y appears
+                    temp_points.append((x, y))
+                if (x, y, z) in out_cubes and (
+                    x,
+                    y,
+                ) not in temp_out:  # first time this x,y appears
+                    temp_out.append((x, y))
+                if (x, y, z) in air_cubes and (
+                    x,
+                    y,
+                ) not in temp_air:  # first time this x,y appears
+                    temp_air.append((x, y))
+                if (x, y, z) in out_air_cubes and (
+                    x,
+                    y,
+                ) not in temp_out_air:  # first time this x,y appears
+                    temp_out_air.append((x, y))
+    print_face(
+        temp_points,
+        temp_out,
+        temp_air,
+        temp_out_air,
+        min_x=min_x - 2,
+        max_x=max_x + 3,
+        min_y=min_y - 2,
+        max_y=max_y + 2,
+    )
 
     print("(z,y)=x")
     temp_points = []
     temp_out = []
     temp_air = []
     temp_out_air = []
-    for x in range(max_x+5, min_x-2, -1):
-        for z in range(min_z-2, max_z+2):
-            for y in range(min_y-2, max_y+2):
-                if (x, y, z) in points and (y, z) not in temp_points: # first time this x,y appears
-                    temp_points.append((y,z))
-                if (x, y, z) in out_cubes and (y, z) not in temp_out: # first time this x,y appears
-                    temp_out.append((y,z))
-                if (x, y, z) in air_cubes and (y, z) not in temp_air: # first time this x,y appears
-                    temp_air.append((y,z))
-                if (x, y, z) in out_air_cubes and (y, z) not in temp_out_air: # first time this x,y appears
-                    temp_out_air.append((y,z))
-    for x in range(min_x-2, max_x+2):
-        for z in range(min_z-2, max_z+2):
-            for y in range(min_y-2, max_y+2):
-                if (x, y, z) in points and (y, z) not in temp_points: # first time this x,y appears
-                    temp_points.append((y,z))
-                if (x, y, z) in out_cubes and (y, z) not in temp_out: # first time this x,y appears
-                    temp_out.append((y,z))
-                if (x, y, z) in air_cubes and (y, z) not in temp_air: # first time this x,y appears
-                    temp_air.append((y,z))
-                if (x, y, z) in out_air_cubes and (y, z) not in temp_out_air: # first time this x,y appears
-                    temp_out_air.append((y,z))
-    print_face(temp_points, temp_out, temp_air, temp_out_air, min_x=min_y-2, max_x=max_y+3, min_y=min_z-2, max_y=max_z+2)
-
+    for x in range(max_x + 5, min_x - 2, -1):
+        for z in range(min_z - 2, max_z + 2):
+            for y in range(min_y - 2, max_y + 2):
+                if (x, y, z) in points and (
+                    y,
+                    z,
+                ) not in temp_points:  # first time this x,y appears
+                    temp_points.append((y, z))
+                if (x, y, z) in out_cubes and (
+                    y,
+                    z,
+                ) not in temp_out:  # first time this x,y appears
+                    temp_out.append((y, z))
+                if (x, y, z) in air_cubes and (
+                    y,
+                    z,
+                ) not in temp_air:  # first time this x,y appears
+                    temp_air.append((y, z))
+                if (x, y, z) in out_air_cubes and (
+                    y,
+                    z,
+                ) not in temp_out_air:  # first time this x,y appears
+                    temp_out_air.append((y, z))
+    for x in range(min_x - 2, max_x + 2):
+        for z in range(min_z - 2, max_z + 2):
+            for y in range(min_y - 2, max_y + 2):
+                if (x, y, z) in points and (
+                    y,
+                    z,
+                ) not in temp_points:  # first time this x,y appears
+                    temp_points.append((y, z))
+                if (x, y, z) in out_cubes and (
+                    y,
+                    z,
+                ) not in temp_out:  # first time this x,y appears
+                    temp_out.append((y, z))
+                if (x, y, z) in air_cubes and (
+                    y,
+                    z,
+                ) not in temp_air:  # first time this x,y appears
+                    temp_air.append((y, z))
+                if (x, y, z) in out_air_cubes and (
+                    y,
+                    z,
+                ) not in temp_out_air:  # first time this x,y appears
+                    temp_out_air.append((y, z))
+    print_face(
+        temp_points,
+        temp_out,
+        temp_air,
+        temp_out_air,
+        min_x=min_y - 2,
+        max_x=max_y + 3,
+        min_y=min_z - 2,
+        max_y=max_z + 2,
+    )
 
     print("(x,z)=y")
     temp_points = []
     temp_out = []
     temp_air = []
     temp_out_air = []
-    for y in range(max_y+5, min_y-2, -1):
-        for x in range(min_x-2, max_x+2):
-            for z in range(min_z-2, max_z+2):
-                if (x, y, z) in points and (x, z) not in temp_points: # first time this x,y appears
-                    temp_points.append((x,z))
-                if (x, y, z) in out_cubes and (x, z) not in temp_out: # first time this x,y appears
-                    temp_out.append((x,z))
-                if (x, y, z) in air_cubes and (x, z) not in temp_air: # first time this x,y appears
-                    temp_air.append((x,z))
-                if (x, y, z) in out_air_cubes and (x, z) not in temp_out_air: # first time this x,y appears
-                    temp_out_air.append((x,z))
-    for y in range(min_y-2, max_y+2):
-        for x in range(min_x-2, max_x+2):
-            for z in range(min_z-2, max_z+2):
-                if (x, y, z) in points and (x, z) not in temp_points: # first time this x,y appears
-                    temp_points.append((x,z))
-                if (x, y, z) in out_cubes and (x, z) not in temp_out: # first time this x,y appears
-                    temp_out.append((x,z))
-                if (x, y, z) in air_cubes and (x, z) not in temp_air: # first time this x,y appears
-                    temp_air.append((x,z))
-                if (x, y, z) in out_air_cubes and (x, z) not in temp_out_air: # first time this x,y appears
-                    temp_out_air.append((x,z))
-    print_face(temp_points, temp_out, temp_air, temp_out_air, min_x=min_x-2, max_x=max_x+3, min_y=min_z-2, max_y=max_z+2)
+    for y in range(max_y + 5, min_y - 2, -1):
+        for x in range(min_x - 2, max_x + 2):
+            for z in range(min_z - 2, max_z + 2):
+                if (x, y, z) in points and (
+                    x,
+                    z,
+                ) not in temp_points:  # first time this x,y appears
+                    temp_points.append((x, z))
+                if (x, y, z) in out_cubes and (
+                    x,
+                    z,
+                ) not in temp_out:  # first time this x,y appears
+                    temp_out.append((x, z))
+                if (x, y, z) in air_cubes and (
+                    x,
+                    z,
+                ) not in temp_air:  # first time this x,y appears
+                    temp_air.append((x, z))
+                if (x, y, z) in out_air_cubes and (
+                    x,
+                    z,
+                ) not in temp_out_air:  # first time this x,y appears
+                    temp_out_air.append((x, z))
+    for y in range(min_y - 2, max_y + 2):
+        for x in range(min_x - 2, max_x + 2):
+            for z in range(min_z - 2, max_z + 2):
+                if (x, y, z) in points and (
+                    x,
+                    z,
+                ) not in temp_points:  # first time this x,y appears
+                    temp_points.append((x, z))
+                if (x, y, z) in out_cubes and (
+                    x,
+                    z,
+                ) not in temp_out:  # first time this x,y appears
+                    temp_out.append((x, z))
+                if (x, y, z) in air_cubes and (
+                    x,
+                    z,
+                ) not in temp_air:  # first time this x,y appears
+                    temp_air.append((x, z))
+                if (x, y, z) in out_air_cubes and (
+                    x,
+                    z,
+                ) not in temp_out_air:  # first time this x,y appears
+                    temp_out_air.append((x, z))
+    print_face(
+        temp_points,
+        temp_out,
+        temp_air,
+        temp_out_air,
+        min_x=min_x - 2,
+        max_x=max_x + 3,
+        min_y=min_z - 2,
+        max_y=max_z + 2,
+    )
 
-def print_slices(points, out_cubes, air_cubes, out_air_cubes, min_x=None, max_x=None, min_y=None, max_y=None):
+
+def print_slices(
+    points,
+    out_cubes,
+    air_cubes,
+    out_air_cubes,
+    min_x=None,
+    max_x=None,
+    min_y=None,
+    max_y=None,
+):
     x_points = list(set([x for x, _, _ in points]))
     x_points.sort()
     y_points = list(set([y for _, y, _ in points]))
@@ -446,73 +570,133 @@ def print_slices(points, out_cubes, air_cubes, out_air_cubes, min_x=None, max_x=
     min_z = min(z_points, default=0)
     max_z = max(z_points, default=1)
 
-    for z in range(max_z+1, min_z-2, -1):
+    for z in range(max_z + 1, min_z - 2, -1):
         temp_points = []
         temp_out = []
         temp_air = []
         temp_out_air = []
         print(f"(x,y)=z({z})")
-        for x in range(min_x-2, max_x+2):
-            for y in range(min_y-2, max_y+2):
-                if (x, y, z) in points and (x, y) not in temp_points: # first time this x,y appears
-                    temp_points.append((x,y))
-                if (x, y, z) in out_cubes and (x, y) not in temp_out: # first time this x,y appears
-                    temp_out.append((x,y))
-                if (x, y, z) in air_cubes and (x, y) not in temp_air: # first time this x,y appears
-                    temp_air.append((x,y))
-                if (x, y, z) in out_air_cubes and (x, y) not in temp_out_air: # first time this x,y appears
-                    temp_out_air.append((x,y))
-        print_face(temp_points, temp_out, temp_air, temp_out_air, min_x=min_x-2, max_x=max_x+3, min_y=min_y-2, max_y=max_y+2)
+        for x in range(min_x - 2, max_x + 2):
+            for y in range(min_y - 2, max_y + 2):
+                if (x, y, z) in points and (
+                    x,
+                    y,
+                ) not in temp_points:  # first time this x,y appears
+                    temp_points.append((x, y))
+                if (x, y, z) in out_cubes and (
+                    x,
+                    y,
+                ) not in temp_out:  # first time this x,y appears
+                    temp_out.append((x, y))
+                if (x, y, z) in air_cubes and (
+                    x,
+                    y,
+                ) not in temp_air:  # first time this x,y appears
+                    temp_air.append((x, y))
+                if (x, y, z) in out_air_cubes and (
+                    x,
+                    y,
+                ) not in temp_out_air:  # first time this x,y appears
+                    temp_out_air.append((x, y))
+        print_face(
+            temp_points,
+            temp_out,
+            temp_air,
+            temp_out_air,
+            min_x=min_x - 2,
+            max_x=max_x + 3,
+            min_y=min_y - 2,
+            max_y=max_y + 2,
+        )
 
-    for x in range(min_x-2, max_x+2):
+    for x in range(min_x - 2, max_x + 2):
         print(f"(z,y)=x({x})")
         temp_points = []
         temp_out = []
         temp_air = []
         temp_out_air = []
-        for z in range(min_z-2, max_z+2):
-            for y in range(min_y-2, max_y+2):
-                if (x, y, z) in points and (y, z) not in temp_points: # first time this x,y appears
-                    temp_points.append((y,z))
-                if (x, y, z) in out_cubes and (y, z) not in temp_out: # first time this x,y appears
-                    temp_out.append((y,z))
-                if (x, y, z) in air_cubes and (y, z) not in temp_air: # first time this x,y appears
-                    temp_air.append((y,z))
-                if (x, y, z) in out_air_cubes and (y, z) not in temp_out_air: # first time this x,y appears
-                    temp_out_air.append((y,z))
-        print_face(temp_points, temp_out, temp_air, temp_out_air, min_x=min_y-2, max_x=max_y+3, min_y=min_z-2, max_y=max_z+2)
+        for z in range(min_z - 2, max_z + 2):
+            for y in range(min_y - 2, max_y + 2):
+                if (x, y, z) in points and (
+                    y,
+                    z,
+                ) not in temp_points:  # first time this x,y appears
+                    temp_points.append((y, z))
+                if (x, y, z) in out_cubes and (
+                    y,
+                    z,
+                ) not in temp_out:  # first time this x,y appears
+                    temp_out.append((y, z))
+                if (x, y, z) in air_cubes and (
+                    y,
+                    z,
+                ) not in temp_air:  # first time this x,y appears
+                    temp_air.append((y, z))
+                if (x, y, z) in out_air_cubes and (
+                    y,
+                    z,
+                ) not in temp_out_air:  # first time this x,y appears
+                    temp_out_air.append((y, z))
+        print_face(
+            temp_points,
+            temp_out,
+            temp_air,
+            temp_out_air,
+            min_x=min_y - 2,
+            max_x=max_y + 3,
+            min_y=min_z - 2,
+            max_y=max_z + 2,
+        )
 
-
-    for y in range(min_y-2, max_y+2):
+    for y in range(min_y - 2, max_y + 2):
         print(f"(x,z)=y({y})")
         temp_points = []
         temp_out = []
         temp_air = []
         temp_out_air = []
-        for x in range(min_x-2, max_x+2):
-            for z in range(min_z-2, max_z+2):
-                if (x, y, z) in points and (x, z) not in temp_points: # first time this x,y appears
-                    temp_points.append((x,z))
-                if (x, y, z) in out_cubes and (x, z) not in temp_out: # first time this x,y appears
-                    temp_out.append((x,z))
-                if (x, y, z) in air_cubes and (x, z) not in temp_air: # first time this x,y appears
-                    temp_air.append((x,z))
-                if (x, y, z) in out_air_cubes and (x, z) not in temp_out_air: # first time this x,y appears
-                    temp_out_air.append((x,z))
-        print_face(temp_points, temp_out, temp_air, temp_out_air, min_x=min_x-2, max_x=max_x+3, min_y=min_z-2, max_y=max_z+2)
-
-
+        for x in range(min_x - 2, max_x + 2):
+            for z in range(min_z - 2, max_z + 2):
+                if (x, y, z) in points and (
+                    x,
+                    z,
+                ) not in temp_points:  # first time this x,y appears
+                    temp_points.append((x, z))
+                if (x, y, z) in out_cubes and (
+                    x,
+                    z,
+                ) not in temp_out:  # first time this x,y appears
+                    temp_out.append((x, z))
+                if (x, y, z) in air_cubes and (
+                    x,
+                    z,
+                ) not in temp_air:  # first time this x,y appears
+                    temp_air.append((x, z))
+                if (x, y, z) in out_air_cubes and (
+                    x,
+                    z,
+                ) not in temp_out_air:  # first time this x,y appears
+                    temp_out_air.append((x, z))
+        print_face(
+            temp_points,
+            temp_out,
+            temp_air,
+            temp_out_air,
+            min_x=min_x - 2,
+            max_x=max_x + 3,
+            min_y=min_z - 2,
+            max_y=max_z + 2,
+        )
 
 
 x_keys = [key[0] for key in keys]
 y_keys = [key[1] for key in keys]
 z_keys = [key[2] for key in keys]
-min_x = min(x_keys)-1
-min_y = min(y_keys)-1
-min_z = min(z_keys)-1
-max_x = max(x_keys)+1
-max_y = max(y_keys)+1
-max_z = max(z_keys)+1
+min_x = min(x_keys) - 1
+min_y = min(y_keys) - 1
+min_z = min(z_keys) - 1
+max_x = max(x_keys) + 1
+max_y = max(y_keys) + 1
+max_z = max(z_keys) + 1
 print(min_x)
 print(max_y)
 print(min_z)
@@ -520,16 +704,17 @@ print(max_x)
 print(max_y)
 print(max_z)
 
+
 def get_out_cubes(cubes: List[Point]):
     x_keys = [key[0] for key in cubes]
     y_keys = [key[1] for key in cubes]
     z_keys = [key[2] for key in cubes]
-    min_x = min(x_keys)-2
-    min_y = min(y_keys)-2
-    min_z = min(z_keys)-2
-    max_x = max(x_keys)+2
-    max_y = max(y_keys)+2
-    max_z = max(z_keys)+2
+    min_x = min(x_keys) - 2
+    min_y = min(y_keys) - 2
+    min_z = min(z_keys) - 2
+    max_x = max(x_keys) + 2
+    max_y = max(y_keys) + 2
+    max_z = max(z_keys) + 2
     out_cubes = set()
     cubes.sort(key=lambda x: x[1])
     cubes.sort(key=lambda x: x[0])
@@ -540,22 +725,28 @@ def get_out_cubes(cubes: List[Point]):
         for x in range(min_x, max_x):
             for y in range(min_y, max_y):
                 # print(f"({x}, {y}, {z})")
-                if (x, y, z) in cubes and (x, y) not in z_go_up: # first time this x,y appears
+                if (x, y, z) in cubes and (
+                    x,
+                    y,
+                ) not in z_go_up:  # first time this x,y appears
                     # print(f"appending ({x}, {y}, {z})")
-                    z_go_up.append((x,y))
+                    z_go_up.append((x, y))
                     out_faces += 1
                     out_cubes.add((x, y, z))
     # print(cubes)
     # print("z_go_up", z_go_up)
     # print_face(z_go_up, min_x=0, max_x=max_x, min_y=0, max_y=max_y)
-    z_go_down = [] 
-    for z in range(max_z, min_z-1, -1):
+    z_go_down = []
+    for z in range(max_z, min_z - 1, -1):
         for x in range(min_x, max_x):
             for y in range(min_y, max_y):
                 # print(f"({x}, {y}, {z})")
-                if (x, y, z) in cubes and (x, y) not in z_go_down: # first time this x,y appears
+                if (x, y, z) in cubes and (
+                    x,
+                    y,
+                ) not in z_go_down:  # first time this x,y appears
                     # print(f"appending ({x}, {y}, {z})")
-                    z_go_down.append((x,y))
+                    z_go_down.append((x, y))
                     out_faces += 1
                     out_cubes.add((x, y, z))
     # print(cubes)
@@ -569,9 +760,12 @@ def get_out_cubes(cubes: List[Point]):
         for z in range(min_z, max_z):
             for y in range(min_y, max_y):
                 # print(f"({x}, {y}, {z})")
-                if (x, y, z) in cubes and (y, z) not in x_go_east: # first time this x,y appears
+                if (x, y, z) in cubes and (
+                    y,
+                    z,
+                ) not in x_go_east:  # first time this x,y appears
                     # print(f"appending ({x}, {y}, {z})")
-                    x_go_east.append((y,z))
+                    x_go_east.append((y, z))
                     out_faces += 1
                     out_cubes.add((x, y, z))
     # print(cubes)
@@ -582,9 +776,12 @@ def get_out_cubes(cubes: List[Point]):
         for z in range(min_z, max_z):
             for y in range(min_y, max_y):
                 # print(f"({x}, {y}, {z})")
-                if (x, y, z) in cubes and (y, z) not in x_go_west: # first time this x,y appears
+                if (x, y, z) in cubes and (
+                    y,
+                    z,
+                ) not in x_go_west:  # first time this x,y appears
                     # print(f"appending ({x}, {y}, {z})")
-                    x_go_west.append((y,z))
+                    x_go_west.append((y, z))
                     out_faces += 1
                     out_cubes.add((x, y, z))
 
@@ -599,7 +796,10 @@ def get_out_cubes(cubes: List[Point]):
         for x in range(min_x, max_x):
             for z in range(min_z, max_z):
                 # print(f"({x}, {y}, {z})")
-                if (x, y, z) in cubes and (x, z) not in y_go_east: # first time this x,y appears
+                if (x, y, z) in cubes and (
+                    x,
+                    z,
+                ) not in y_go_east:  # first time this x,y appears
                     # print(f"appending ({x}, {y}, {z})")
                     y_go_east.append((x, z))
                     out_faces += 1
@@ -612,7 +812,10 @@ def get_out_cubes(cubes: List[Point]):
         for x in range(min_x, max_x):
             for z in range(min_z, max_z):
                 # print(f"({x}, {y}, {z})")
-                if (x, y, z) in cubes and (x, z) not in y_go_west: # first time this x,y appears
+                if (x, y, z) in cubes and (
+                    x,
+                    z,
+                ) not in y_go_west:  # first time this x,y appears
                     # print(f"appending ({x}, {y}, {z})")
                     y_go_west.append((x, z))
                     out_faces += 1
@@ -621,12 +824,13 @@ def get_out_cubes(cubes: List[Point]):
     # print("y_go_west", y_go_west)
     return out_cubes
 
+
 new_out_faces = 0
 out_cubes = get_out_cubes(keys)
 
-center_x = (max_x - min_x)//2
-center_y = (max_y - min_y)//2
-center_z = (max_z - min_z)//2
+center_x = (max_x - min_x) // 2
+center_y = (max_y - min_y) // 2
+center_z = (max_z - min_z) // 2
 print(center_x, center_y, center_z)
 adjancent_air = set()
 for cube in out_cubes:
