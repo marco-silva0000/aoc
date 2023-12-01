@@ -1,1 +1,14 @@
+# OS
+.DS_Store
+
+# Python
+*.pyc
+*.pyo
+
+# Rust
 target/
+
+# IDE
+.idea/
+.vscode/
+
