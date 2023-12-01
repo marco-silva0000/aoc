@@ -1,20 +1,10 @@
-numbers_dict = {
-    "one": 1,
-    "two": 2,
-    "three": 3,
-    "four": 4,
-    "five": 5,
-    "six": 6,
-    "seven": 7,
-    "eight": 8,
-    "nine": 9,
-}
+numbers_dict = {key: index for index, key in enumerate("one two three four five six seven eight nine".split(" "), start=1) }
 reverse_numbers_dict = {key[::-1]: value for key, value in numbers_dict.items()}
 
 f = open("1/input.txt")
 
 
-def match_first(iterable, predicate):
+def get_first_non_error_result(iterable, predicate):
     for i in iterable:
         try:
             return predicate(i)
@@ -22,27 +12,29 @@ def match_first(iterable, predicate):
             pass
 
 
-def part2_process_line(l):
+def part2_process_line(l, matching_dict=numbers_dict):
     current_word = ""
+    dict_keys = list(matching_dict.keys())
     first_digit = None
-    second_digit = None
     for c in l:
         # print("c", c)
         # print("current_word", current_word)
-        try:
+        if c.isdigit():
             first_digit = int(c)
             break
-        except:
+        else:
             current_word += c
             current_word = current_word[-5:]
-            if current_word in numbers_dict.keys():
-                first_digit = numbers_dict[current_word]
+            if current_word in dict_keys:
+                first_digit = matching_dict[current_word]
                 break
-            elif current_word[1:] in numbers_dict.keys():
-                first_digit = numbers_dict[current_word[1:]]
+            elif (substring := current_word[1:]) in dict_keys:
+                # print("substring", substring)
+                first_digit = matching_dict[substring]
                 break
-            elif current_word[2:] in numbers_dict.keys():
-                first_digit = numbers_dict[current_word[2:]]
+            elif (substring := current_word[2:]) in dict_keys:
+                # print("substring", substring)
+                first_digit = matching_dict[substring]
                 break
     return first_digit
 
@@ -52,14 +44,15 @@ part2_result = []
 for l in f.readlines():
     l = l.strip()
     print(l)
-    first = match_first(l, lambda x: int(x))
-    last = match_first(l[::-1], lambda x: int(x))
-    # part1_result.append(int(f"{first}{last}"))
+    first = get_first_non_error_result(l, lambda x: int(x))
+    last = get_first_non_error_result(l[::-1], lambda x: int(x))
+    part1_result.append(int(f"{first}{last}"))
     first_part_2 = part2_process_line(l)
-    last_part_2 = part2_process_line(l[::-1])
+    last_part_2 = part2_process_line(l[::-1], matching_dict=reverse_numbers_dict)
     part2_result.append(int(f"{first_part_2}{last_part_2}"))
 
 
+print(part1_result)
 print(f"part1: {sum(part1_result)}")
 print(part2_result)
 print(f"part2: {sum(part2_result)}")
