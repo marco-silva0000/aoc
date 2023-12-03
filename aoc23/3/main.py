@@ -43,6 +43,7 @@ def get_x_neighbours(point: Point) -> List[Point]:
     x, y = point
     return [(x+1, y), (x-1, y),]
 
+
 def any_neighbour_is_symbol(point: Point) -> bool:
     neighbours = get_neighbours(point)
     for n in neighbours:
