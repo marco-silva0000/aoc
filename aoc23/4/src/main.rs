@@ -1,11 +1,12 @@
 use itertools::Itertools;
+use std::collections::HashSet;
 use std::env;
 use std::fs;
 
 fn main() {
     let mut current_dir = env::current_dir().unwrap().to_str().unwrap().to_owned();
-    if !current_dir.ends_with("/2") {
-        current_dir += "/2"
+    if !current_dir.ends_with("/4") {
+        current_dir += "/4"
     }
     let contents = fs::read_to_string(current_dir + "/input.txt").expect("couldn't read file");
     let lines = contents.lines();
@@ -14,44 +15,34 @@ fn main() {
     let result = lines
         .into_iter()
         .map(|l| {
-            println!("{:?}", l);
-            // l contains: Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
+            // println!("{:?}", l);
+            // Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
             // add max of each color to numbers
             l.split_once(':')
                 .unwrap()
                 .1
-                .split(';')
+                .split('|')
                 .map(|part| {
-                    part.split(',').fold([0, 0, 0], |mut set, c| {
-                        match c.trim().split_once(' ') {
-                            Some((num, "red")) => set[0] += num.parse::<usize>().unwrap(),
-                            Some((num, "blue")) => set[1] += num.parse::<usize>().unwrap(),
-                            Some((num, "green")) => set[2] += num.parse::<usize>().unwrap(),
-                            _ => {
-                                println!("{:?}", c);
-                                unreachable!("bad input")
-                            }
-                        }
-                        set
-                    })
+                    // println!("{:?}", part);
+                    part.split_whitespace()
+                        .fold(HashSet::new(), |mut acc, val| {
+                            // println!("{:?}", val);
+                            acc.insert(val.parse::<usize>().unwrap());
+                            acc
+                        })
                 })
-                .collect_vec()
-        })
-        .map(|game| {
-            println!("{:?}", game);
-            game.iter()
-                .fold([0, 0, 0], |set, part| {
-                    [
-                        set[0].max(part[0]),
-                        set[1].max(part[1]),
-                        set[2].max(part[2]),
-                    ]
+                .into_iter()
+                .reduce(|acc, val| {
+                    // println!("{:?} {:?}", acc, val);
+                    acc.intersection(&val).cloned().collect()
                 })
+                .unwrap()
                 .iter()
-                .product::<usize>()
+                .count()
         })
-        .collect_vec();
+        .filter(|x| *x > 0)
+        .map(|x| 2_i32.pow(x as u32 - 1))
+        .sum::<i32>();
 
     println!("{:?}", result);
-    println!("{:?}", result.iter().sum::<usize>());
 }
