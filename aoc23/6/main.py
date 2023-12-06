@@ -1,5 +1,5 @@
 from typing import List, Set, Dict, Tuple, Optional, Union
-from math import sqrt, prod
+import math
 
 f = open("6/test.txt")
 f = open("6/input.txt")
@@ -37,7 +37,7 @@ for d in distance_iter:
             break
 
 print(part1)
-print(prod(part1))
+print(math.prod(part1))
 time = int("".join(map(str, time)))
 distance = int("".join(map(str, distance)))
 
@@ -53,11 +53,22 @@ for acceleration in range(time):
         break
 
 second = 0
-for acceleration in range(first, time):
+for acceleration in range(time, first, -1):
     time_left = time - acceleration
     estimate = acceleration * time_left
-    if estimate < distance:
+    if estimate > distance:
         second = acceleration
         print(acceleration)
         break
 print(second - first)
+
+# -acceleration^2  + acceleration * time - distance = 0
+a = -1
+b = time
+c = -distance
+
+x1 = (-b+math.sqrt((b**2)-(4*(a*c))))/(2*a)
+x2 = (-b-math.sqrt((b**2)-(4*(a*c))))/(2*a)
+print(x1)
+print(x2)
+print(x2-x1)
