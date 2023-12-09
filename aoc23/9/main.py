@@ -36,12 +36,12 @@ def sperad_back(values: List[int]):
     # log.debug(f"sperading", values=values)
     if any([x for x in values if x != 0]):
         next_list = differ(values)
-        log.debug(f"will spread done", values=values)
+        # log.debug(f"will spread done", values=values)
         next_list = sperad_back(next_list)
         # log.debug(f"sperading done", next_list=next_list)
         to_prepend = values[0] - next_list[0]
         values.insert(0, to_prepend)
-        log.debug(f"sperading done", values=values, next_list=next_list, to_prepend=to_prepend)
+        # log.debug(f"sperading done", values=values, next_list=next_list, to_prepend=to_prepend)
     return values
 
 
@@ -49,34 +49,37 @@ def sperad(values: List[int]):
     # log.debug(f"sperading", values=values)
     if any([x for x in values if x != 0]):
         next_list = differ(values)
-        log.debug(f"will spread done", values=values)
+        # log.debug(f"will spread done", values=values)
         next_list = sperad(next_list)
         # log.debug(f"sperading done", next_list=next_list)
         to_append = values[-1] + next_list[-1]
         values.append(to_append)
-        log.debug(f"sperading done", values=values, next_list=next_list, to_append=to_append)
+        # log.debug(f"sperading done", values=values, next_list=next_list, to_append=to_append)
     return values
         
     
 
-def part1():
-    lines = f.readlines()
+def part1(values_list):
     result = []
-    for line in lines:
-        values = list(map(int, line.split()))
+    for values in values_list:
         spreaded_values = sperad(values)[-1]
         result.append(spreaded_values)
-        log.debug(f"new result", values=values, spreaded_values=spreaded_values, result=result)
+        # log.debug(f"new result", values=values, spreaded_values=spreaded_values, result=result)
     print(sum(result))
 
-def part2():
-    lines = f.readlines()
+def part2(values_list):
     result = []
-    for line in lines:
-        values = list(map(int, line.split()))
+    for values in values_list:
         spreaded_values = sperad_back(values)[0]
         result.append(spreaded_values)
-        log.debug(f"new result", values=values, spreaded_values=spreaded_values, result=result)
+        # log.debug(f"new result", values=values, spreaded_values=spreaded_values, result=result)
     print(sum(result))
 
-part2()
+lines = f.readlines()
+values_list = []
+for line in lines:
+    values = list(map(int, line.split()))
+    values_list.append(values)
+
+part1(values_list)
+part2(values_list)
