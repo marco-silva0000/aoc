@@ -97,9 +97,13 @@ fn process_line(l_slice: &[u8], matcher_function: &dyn Fn(&str) -> Option<u32>) 
 
 fn main() {
     let mut current_dir = env::current_dir().unwrap().to_str().unwrap().to_owned();
-    if !current_dir.ends_with("/1") {
-        current_dir += "/1"
+    let module_path = module_path!();
+    let (_, day) = module_path.split_once('_').unwrap();
+    let dir_str = "/day-".to_string() + day;
+    if !current_dir.ends_with(&dir_str) {
+        current_dir += &dir_str;
     }
+    println!("{:?}", current_dir);
     let contents = fs::read_to_string(current_dir + "/input.txt").expect("couldn't read file");
     let lines = contents.lines();
 
