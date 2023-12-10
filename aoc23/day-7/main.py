@@ -10,6 +10,7 @@ f = open("7/test.txt")
 f = open("7/input2.txt")
 f = open("7/input.txt")
 
+
 class Card(str):
     ranks = "23456789TJQKA"
 
@@ -39,7 +40,9 @@ class Hand(str):
     @property
     def is_poker_alho(self):
         try:
-            five_card = next(c for c in self if self.count(c) == 5-self.n_jokers if c != 'J')
+            five_card = next(
+                c for c in self if self.count(c) == 5 - self.n_jokers if c != "J"
+            )
             log.debug(f"is_poker_alho", card=five_card)
             return True
         except StopIteration:
@@ -50,7 +53,9 @@ class Hand(str):
     @property
     def is_poker(self):
         try:
-            four_card = next(c for c in self if self.count(c) == 4-self.n_jokers if c != 'J')
+            four_card = next(
+                c for c in self if self.count(c) == 4 - self.n_jokers if c != "J"
+            )
             log.debug(f"is_poker", hand=self, four_card=four_card)
             return not self.is_poker_alho
         except StopIteration:
@@ -61,10 +66,14 @@ class Hand(str):
     @property
     def is_three(self):
         try:
-            three_card = next(c for c in self if self.count(c) == 3-self.n_jokers if c != 'J')
+            three_card = next(
+                c for c in self if self.count(c) == 3 - self.n_jokers if c != "J"
+            )
             log.debug(f"three_card: {three_card}")
             log.debug(f"part2: {self.part2}")
-            return not self.is_poker_alho and not self.is_poker and not self.is_full_house
+            return (
+                not self.is_poker_alho and not self.is_poker and not self.is_full_house
+            )
         except StopIteration:
             if self.part2:
                 return self.count("J") == 3
@@ -73,20 +82,27 @@ class Hand(str):
     @property
     def is_pair(self):
         try:
-            two_card = next(c for c in self if self.count(c) == 2-self.n_jokers if c != 'J')
+            two_card = next(
+                c for c in self if self.count(c) == 2 - self.n_jokers if c != "J"
+            )
             log.debug(f"two_card: {two_card}")
-            return  not self.is_poker_alho and not self.is_poker and not self.is_full_house
+            return (
+                not self.is_poker_alho and not self.is_poker and not self.is_full_house
+            )
         except StopIteration:
             if self.part2:
                 return self.count("J") == 2
             return False
 
-
     @property
     def is_full_house(self):
         try:
-            three_card = next(c for c in self if self.count(c) == 3-self.n_jokers if c != 'J')
-            two_card = next(c for c in self if self.count(c) == 2 if c not in [three_card, 'J'])
+            three_card = next(
+                c for c in self if self.count(c) == 3 - self.n_jokers if c != "J"
+            )
+            two_card = next(
+                c for c in self if self.count(c) == 2 if c not in [three_card, "J"]
+            )
             log.debug(f"is_full_house: {three_card} {two_card}")
             return True
         except StopIteration:
@@ -95,10 +111,19 @@ class Hand(str):
     @property
     def is_two_pairs(self):
         try:
-            two_card = next(c for c in self if self.count(c) == 2-self.n_jokers if c != 'J')
-            other_two_card = next(c for c in self if self.count(c) == 2 if c not in [two_card, 'J'])
+            two_card = next(
+                c for c in self if self.count(c) == 2 - self.n_jokers if c != "J"
+            )
+            other_two_card = next(
+                c for c in self if self.count(c) == 2 if c not in [two_card, "J"]
+            )
 
-            return not self.is_poker_alho and not self.is_poker and not self.is_full_house and not self.is_three
+            return (
+                not self.is_poker_alho
+                and not self.is_poker
+                and not self.is_full_house
+                and not self.is_three
+            )
         except StopIteration:
             return False
 
@@ -138,8 +163,10 @@ class Hand(str):
 
         return this_points < other_points
 
+
 class Hand2(Hand):
     part2 = True
+
 
 assert Card2("2") < Card2("3")
 assert Card2("2") < Card2("3")
@@ -158,7 +185,6 @@ assert Hand2("AAKKJ").is_full_house
 assert Hand2("AQKKJ").is_three
 
 # exit()
-
 
 
 lines = f.readlines()
@@ -180,7 +206,7 @@ for l in lines:
 sorted_hands = sorted(hands, key=lambda x: x[0])
 for i, (hand, bid) in enumerate(sorted_hands):
     print(f"{i+1}: {hand} {bid} {hand.get_points()}")
-part1 = sum([(i+1)*bid for i, (_, bid) in enumerate(sorted_hands)])
+part1 = sum([(i + 1) * bid for i, (_, bid) in enumerate(sorted_hands)])
 print(f"part1: {part1}")
 
 # part2
@@ -190,5 +216,5 @@ sorted_hands = sorted(sorted_hands, key=lambda x: x[0])
 
 for i, (hand, bid) in enumerate(sorted_hands):
     print(f"{i+1}: {hand} {bid} {hand.get_points()}")
-part2 = sum([(i+1)*bid for i, (_, bid) in enumerate(sorted_hands)])
+part2 = sum([(i + 1) * bid for i, (_, bid) in enumerate(sorted_hands)])
 print(f"part2: {part2}")

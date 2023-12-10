@@ -7,7 +7,7 @@ f = open("3/input.txt")
 Point = Tuple[int, int]
 PointAttr = Tuple[str, bool, bool, Optional[bool]]
 
-grid: Dict[Point, PointAttr] =  dict()
+grid: Dict[Point, PointAttr] = dict()
 part_numbers = []
 max_x = 0
 max_y = 0
@@ -18,7 +18,12 @@ for y, l in enumerate(f.readlines()):
         is_int = c.isdigit()
         is_symbol = not is_int and c != "."
         is_part = None
-        grid[(x, y)] = (c, is_int, is_symbol, is_part,)
+        grid[(x, y)] = (
+            c,
+            is_int,
+            is_symbol,
+            is_part,
+        )
         if x > max_x:
             max_x = x
     if y > max_y:
@@ -27,21 +32,36 @@ print(max_x)
 print(max_y)
 print(grid)
 
+
 def is_touching(one: Point, other: Point) -> bool:
-    x, y  = one
+    x, y = one
     xx, yy = other
     dx = abs(xx - x)
     dy = abs(yy - y)
-        
-    return dx + dy == 1 
+
+    return dx + dy == 1
+
 
 def get_neighbours(point: Point) -> List[Point]:
     x, y = point
-    return [(x+1, y), (x-1, y), (x, y+1), (x, y-1), (x+1, y+1), (x-1, y+1), (x+1, y-1), (x-1, y-1),]
+    return [
+        (x + 1, y),
+        (x - 1, y),
+        (x, y + 1),
+        (x, y - 1),
+        (x + 1, y + 1),
+        (x - 1, y + 1),
+        (x + 1, y - 1),
+        (x - 1, y - 1),
+    ]
+
 
 def get_x_neighbours(point: Point) -> List[Point]:
     x, y = point
-    return [(x+1, y), (x-1, y),]
+    return [
+        (x + 1, y),
+        (x - 1, y),
+    ]
 
 
 def any_neighbour_is_symbol(point: Point) -> bool:
@@ -53,27 +73,38 @@ def any_neighbour_is_symbol(point: Point) -> bool:
 
     return False
 
+
 for point, attrs in grid.items():
     x, y = point
     is_int = attrs[1]
     if is_int and any_neighbour_is_symbol(point):
         pointAttr = grid[point]
-        grid[point] = (pointAttr[0], pointAttr[1], pointAttr[2], True,)
+        grid[point] = (
+            pointAttr[0],
+            pointAttr[1],
+            pointAttr[2],
+            True,
+        )
 
 prev_is_part = False
-for y in range(max_y+1):
-    for x in range(max_x+1):
+for y in range(max_y + 1):
+    for x in range(max_x + 1):
         point = (x, y)
         is_part = grid[point][3]
         is_int = grid[point][1]
         if prev_is_part and is_int:
             is_part = True
             pointAttr = grid[point]
-            grid[point] = (pointAttr[0], pointAttr[1], pointAttr[2], True,)
+            grid[point] = (
+                pointAttr[0],
+                pointAttr[1],
+                pointAttr[2],
+                True,
+            )
         prev_is_part = is_part
 
 prev_is_part = False
-for y in range(max_y+1):
+for y in range(max_y + 1):
     for x in range(max_x, -1, -1):
         point = (x, y)
         is_part = grid[point][3]
@@ -81,18 +112,23 @@ for y in range(max_y+1):
         if prev_is_part and is_int:
             is_part = True
             pointAttr = grid[point]
-            grid[point] = (pointAttr[0], pointAttr[1], pointAttr[2], True,)
+            grid[point] = (
+                pointAttr[0],
+                pointAttr[1],
+                pointAttr[2],
+                True,
+            )
         prev_is_part = is_part
 
 
 current_int = ""
 current_parts = [[]]
-for y in range(max_y+1):
+for y in range(max_y + 1):
     if current_int:
         part_numbers.append(int(current_int))
         current_int = ""
         current_parts.append([])
-    for x in range(max_x+1):
+    for x in range(max_x + 1):
         point = (x, y)
         is_part = grid[point][3]
         if is_part:
@@ -116,8 +152,8 @@ print(parts_dict)
 
 
 gear_tuples = []
-for y in range(max_y+1):
-    for x in range(max_x+1):
+for y in range(max_y + 1):
+    for x in range(max_x + 1):
         point = (x, y)
         is_gear = grid[point][0] == "*"
         if is_gear:
@@ -155,11 +191,3 @@ for gear_tuple in gear_tuples:
     gear_ratios.append(first_int * second_int)
 print(gear_ratios)
 print(sum(gear_ratios))
-
-
-
-
-
-
-
-

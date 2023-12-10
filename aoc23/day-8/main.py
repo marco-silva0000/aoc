@@ -11,13 +11,15 @@ f = open("8/test.txt")
 f = open("8/input.txt")
 skip_part_1 = False
 
+
 @dataclass()
-class Node():
+class Node:
     name: str
     neighbour_list: List[str]
     l: str
     r: str
     finished_in: int = 0
+
 
 lines = f.readlines()
 lines = iter(lines)
@@ -48,7 +50,9 @@ if not skip_part_1:
         if current_node == goal_node or current_node.name == "ZZZ":
             print("part1:", steps)
             break
-        next_node_name = current_node.l if instruction.lower() == "l" else current_node.r
+        next_node_name = (
+            current_node.l if instruction.lower() == "l" else current_node.r
+        )
         current_node = node_map[next_node_name]
         steps += 1
 
@@ -72,13 +76,12 @@ for instruction in cycle(instructions):
         pass
         # print(steps)
     for i, current_node in enumerate(current_nodes):
-        next_node_name = current_node.l if instruction.lower() == "l" else current_node.r
+        next_node_name = (
+            current_node.l if instruction.lower() == "l" else current_node.r
+        )
         next_node = node_map[next_node_name]
         if next_node.name.endswith("Z") and next_node.finished_in == 0:
             finished_nodes[i] = steps
 
         next_nodes.append(next_node)
     current_nodes = next_nodes
-
-
-

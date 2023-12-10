@@ -1,4 +1,3 @@
-
 f = open("2/test.txt")
 f = open("2/input.txt")
 
@@ -6,8 +5,10 @@ MAX_RED = 12
 MAX_GREEN = 13
 MAX_BLUE = 14
 
+
 class ValidationError(Exception):
     pass
+
 
 def validate_draws(draws, check_max=True):
     max_red = 0
@@ -52,11 +53,10 @@ for l in f.readlines():
         valid_game_ids.append(game_id)
     except ValidationError:
         pass
-    r,g,b = validate_draws(draws, check_max=False)
-    valid_game_powers.append(r*g*b)
+    r, g, b = validate_draws(draws, check_max=False)
+    valid_game_powers.append(r * g * b)
 
 print(valid_game_ids)
 print(sum(valid_game_ids))
 print(valid_game_powers)
 print(sum(valid_game_powers))
-

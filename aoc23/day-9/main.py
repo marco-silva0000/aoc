@@ -11,12 +11,13 @@ log = get_logger()
 
 
 @dataclass()
-class Node():
+class Node:
     name: str
     neighbour_list: List[str]
     l: str
     r: str
     finished_in: int = 0
+
 
 def differ(values: List[int]):
     # log.debug(f"differ", values=values)
@@ -56,8 +57,7 @@ def sperad(values: List[int]):
         values.append(to_append)
         # log.debug(f"sperading done", values=values, next_list=next_list, to_append=to_append)
     return values
-        
-    
+
 
 def part1(values_list) -> str:
     result = []
@@ -67,6 +67,7 @@ def part1(values_list) -> str:
         # log.debug(f"new result", values=values, spreaded_values=spreaded_values, result=result)
     return str(sum(result))
 
+
 def part2(values_list) -> str:
     result = []
     for values in values_list:
@@ -75,12 +76,14 @@ def part2(values_list) -> str:
         # log.debug(f"new result", values=values, spreaded_values=spreaded_values, result=result)
     return str(sum(result))
 
+
 def get_data():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     f = open(f"{current_dir}/input.txt")
     data = f.read()
     f.close()
     return data
+
 
 def parse(data: str):
     # current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -91,11 +94,13 @@ def parse(data: str):
         values_list.append(values)
     return values_list
 
+
 if __name__ == "__main__":
     data = get_data()
     parsed_data = parse(data)
     print(part1(parsed_data))
     print(part2(parsed_data))
+
 
 def test_part1():
     data = """0 3 6 9 12 15
@@ -105,7 +110,6 @@ def test_part1():
     log.debug(parsed_data)
     result = part1(parsed_data)
     assert result == "114"
-
 
 
 def test_part2():

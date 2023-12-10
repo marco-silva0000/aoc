@@ -1,5 +1,10 @@
-numbers_dict = {key: index for index, key in enumerate("one two three four five six seven eight nine".split(" "), start=1) }
-digits_dict = {str(key): index for index, key in enumerate(range(1, 10), start=1) }
+numbers_dict = {
+    key: index
+    for index, key in enumerate(
+        "one two three four five six seven eight nine".split(" "), start=1
+    )
+}
+digits_dict = {str(key): index for index, key in enumerate(range(1, 10), start=1)}
 numbers_dict.update(digits_dict)
 reverse_numbers_dict = {key[::-1]: value for key, value in numbers_dict.items()}
 

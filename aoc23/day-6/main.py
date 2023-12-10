@@ -22,10 +22,12 @@ for d in distance_iter:
         wins = 0
         acceleration = 0
         for tick in range(t):
-            estimate = acceleration/2 * tick**2
+            estimate = acceleration / 2 * tick**2
             time_left = t - tick
             estimate = acceleration * time_left
-            print(f"acceleration: {acceleration}, tick: {tick} time_left: {time_left} estimate: {estimate} d: {d}")
+            print(
+                f"acceleration: {acceleration}, tick: {tick} time_left: {time_left} estimate: {estimate} d: {d}"
+            )
             if estimate > d:
                 print(tick)
                 wins += 1
@@ -67,8 +69,8 @@ a = -1
 b = time
 c = -distance
 
-x1 = (-b+math.sqrt((b**2)-(4*(a*c))))/(2*a)
-x2 = (-b-math.sqrt((b**2)-(4*(a*c))))/(2*a)
+x1 = (-b + math.sqrt((b**2) - (4 * (a * c)))) / (2 * a)
+x2 = (-b - math.sqrt((b**2) - (4 * (a * c)))) / (2 * a)
 print(x1)
 print(x2)
-print(x2-x1)
+print(x2 - x1)

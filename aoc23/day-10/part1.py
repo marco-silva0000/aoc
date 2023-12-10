@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from itertools import cycle
 
 log = get_logger()
+
+
 def part1(values_list) -> str:
     result = []
     for values in values_list:

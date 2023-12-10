@@ -25,11 +25,13 @@ def get_data():
     f.close()
     return data
 
+
 if __name__ == "__main__":
     data = get_data()
     parsed_data = parse(data)
     print(part1(parsed_data))
     print(part2(parsed_data))
+
 
 def test_part1():
     data = """"""
