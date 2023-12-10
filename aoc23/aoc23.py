@@ -33,6 +33,8 @@ def main(*args, **kwargs):
         data = module.get_data()
         parsed_data = module.parse(data)
         if part == "all":
+            module.test_part1()
+            print(module.test_part2())
             print(module.part1(parsed_data))
             print(module.part2(parsed_data))
         elif part == "1":
