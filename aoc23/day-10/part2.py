@@ -78,7 +78,6 @@ class PointAttr:
     is_pipe: Optional[bool] = None
     is_loop: bool = False
     dist_from_start: Optional[int] = None
-    touched_by_light: Optional[bool] = None
 
     def neighbours(self):
         if self.direction == Direction.NORTHSOUTH:
@@ -143,10 +142,7 @@ def print_map(grid: Grid, dists=False, points_enclosed=[]):
                     if p in points_enclosed:
                         print(f"{bcolors.BLU}{grid[p].direction}{bcolors.ENDC}", end="")
                     else:
-                        if grid[p].touched_by_light:
-                            print(f"{bcolors.BLU}{grid[p].direction}{bcolors.ENDC}", end="")
-                        else:
-                            print(f"{grid[p].direction}", end="")
+                        print(f"{grid[p].direction}", end="")
             else:
                 print(" ", end="")
         print()
@@ -192,39 +188,7 @@ def part2(values_list) -> str:
     max_y_mapped = max(map(lambda p: p.y, mapped_values))
     log.debug("will scan in boundry", min_x_mapped=min_x_mapped, max_x_mapped=max_x_mapped, min_y_mapped=min_y_mapped, max_y_mapped=max_y_mapped)
     points_enclosed = []
-    for y in range(min_y_mapped -1 , max_y_mapped + 1):
-        for x in range(min_x_mapped-1 , max_x_mapped + 1):
-            p = (x, y)
-            if p in grid:
-                if grid[p].dist_from_start is None:  # is not part of loop
-                    grid[p].touched_by_light = True
-                else:
-                    break
-        for x in range(max_x_mapped + 1, min_x_mapped-1 , -1):
-            p = (x, y)
-            if p in grid:
-                if grid[p].dist_from_start is None:  # is not part of loop
-                    grid[p].touched_by_light = True
-                else:
-                    break
-                    
-    for x in range(min_x_mapped -1 , max_x_mapped + 1):
-        for y in range(min_y_mapped -1 , max_y_mapped + 1):
-            p = (x, y)
-            if p in grid:
-                if grid[p].dist_from_start is None:
-                    grid[p].touched_by_light = True
-                else:
-                    break
-        for y in range(max_y_mapped + 1, min_y_mapped -1 , -1):
-            p = (x, y)
-            if p in grid:
-                if grid[p].dist_from_start is None:
-                    grid[p].touched_by_light = True
-                else:
-                    break
-
-    maybe_enclosed = list(filter(lambda p: p.dist_from_start is None and not p.touched_by_light, grid.values()))
+    maybe_enclosed = list(filter(lambda p: p.dist_from_start is None, grid.values()))
     for p in maybe_enclosed:
         # log.debug("maybe_enclosed", p=p)
         count = 0
