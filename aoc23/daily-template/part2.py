@@ -12,4 +12,4 @@ def part2(values_list) -> str:
     result = []
     for values in values_list:
         pass
-    return str(sum(result))
+    return ""

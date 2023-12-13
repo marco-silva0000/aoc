@@ -13,8 +13,7 @@ def parse(data: str):
     lines = data.splitlines()
     values_list = []
     for line in lines:
-        values = list(map(int, line.split()))
-        values_list.append(values)
+        values_list.append(line)
     return values_list
 
 
