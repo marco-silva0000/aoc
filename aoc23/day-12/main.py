@@ -29,7 +29,7 @@ if __name__ == "__main__":
     data = get_data()
     parsed_data = parse(data)
     print(part1(parsed_data))
-    print(part2(parsed_data))
+    print(part2(parsed_data, folding=5))
 
 def test_part1():
     data = """???.### 1,1,3
@@ -111,7 +111,7 @@ def test_line1_folding1_part2():
     data = """???.### 1,1,3"""
     parsed_data = parse(data)
     log.debug(parsed_data)
-    result = part2(parsed_data)
+    result = part2(parsed_data, folding=1)
     assert result == "1"
 
 
@@ -119,7 +119,7 @@ def test_line2_folding1_part2():
     data=""".??..??...?##. 1,1,3"""
     parsed_data = parse(data)
     log.debug(parsed_data)
-    result = part2(parsed_data)
+    result = part2(parsed_data, folding=1)
     assert result == "4"
 
 
@@ -127,7 +127,7 @@ def test_line3_folding1_part2():
     data="""?#?#?#?#?#?#?#? 1,3,1,6"""
     parsed_data = parse(data)
     log.debug(parsed_data)
-    result = part2(parsed_data)
+    result = part2(parsed_data, folding=1)
     assert result == "1"
 
 
@@ -135,7 +135,7 @@ def test_line4_folding1_part2():
     data="""????.#...#... 4,1,1"""
     parsed_data = parse(data)
     log.debug(parsed_data)
-    result = part2(parsed_data)
+    result = part2(parsed_data, folding=1)
     assert result == "1"
 
 
@@ -143,7 +143,7 @@ def test_line5_folding1_part2():
     data="""????.######..#####. 1,6,5"""
     parsed_data = parse(data)
     log.debug(parsed_data)
-    result = part2(parsed_data)
+    result = part2(parsed_data, folding=1)
     assert result == "4"
 
 
@@ -151,14 +151,14 @@ def test_line6_folding1_part2():
     data="""?###???????? 3,2,1"""
     parsed_data = parse(data)
     log.debug(parsed_data)
-    result = part2(parsed_data)
+    result = part2(parsed_data, folding=1)
     assert result == "10"
 
 def test_antepen_folding1_part2():
     data="""#.?#?.#.????.???# 1,3,1,2,4"""
     parsed_data = parse(data)
     log.debug(parsed_data)
-    result = part2(parsed_data)
+    result = part2(parsed_data, folding=1)
     print(result)
     assert result == "3"
 
@@ -171,7 +171,7 @@ def test_folding1_part2():
 ?###???????? 3,2,1"""
     parsed_data = parse(data)
     log.debug(parsed_data)
-    result = part2(parsed_data)
+    result = part2(parsed_data, folding=1)
     assert result == "21"
 
 def test_line0_part2():
