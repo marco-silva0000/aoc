@@ -36,6 +36,8 @@ def run_part1():
     data = get_data()
     parsed_data = parse(data)
     print(part1(parsed_data))
+
+
 """
 rn=1 becomes 30.
 cm- becomes 253.
@@ -49,6 +51,7 @@ pc- becomes 48.
 pc=6 becomes 214.
 ot=7 becomes 231
 """
+
 
 def test_part1():
     data = """rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7"""

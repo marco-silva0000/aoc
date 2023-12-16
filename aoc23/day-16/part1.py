@@ -11,11 +11,13 @@ logger = structlog.get_logger()
 # Point = Tuple[int, int]
 # Tile = Tuple[str, bool, bool, Optional[bool]]
 
+
 @dataclass()
 class Point:
     x: int
     y: int
-    def move(self, direction: 'Direction') -> 'Point':
+
+    def move(self, direction: "Direction") -> "Point":
         match direction:
             case Direction.NORTH:
                 return Point(x=self.x, y=self.y - 1)
@@ -25,6 +27,7 @@ class Point:
                 return Point(x=self.x + 1, y=self.y)
             case Direction.WEST:
                 return Point(x=self.x - 1, y=self.y)
+
     def __hash__(self):
         return hash((self.x, self.y))
 
@@ -63,7 +66,7 @@ class Beam:
             case Direction.WEST:
                 return f"<"
 
-    def traverse(self, tile: 'Tile', max_x, max_y) -> List['Beam']:
+    def traverse(self, tile: "Tile", max_x, max_y) -> List["Beam"]:
         path = self.path.copy()
         path.append(self.position)
         match tile.type:
@@ -146,19 +149,23 @@ class Beam:
                             direction=Direction.NORTH,
                             path=[],
                             children=[],
-                            )
+                        )
                         new_beam2 = Beam(
                             origin=new_position2,
                             position=new_position2,
                             direction=Direction.SOUTH,
                             path=[],
                             children=[],
-                            )
+                        )
                         new_beams = []
-                        if (0 <= new_beam1.position.x < max_x) and (0 <= new_beam1.position.y < max_y):
+                        if (0 <= new_beam1.position.x < max_x) and (
+                            0 <= new_beam1.position.y < max_y
+                        ):
                             self.children.append(new_beam1)
                             new_beams.append(new_beam1)
-                        if (0 <= new_beam2.position.x < max_x) and (0 <= new_beam2.position.y < max_y):
+                        if (0 <= new_beam2.position.x < max_x) and (
+                            0 <= new_beam2.position.y < max_y
+                        ):
                             self.children.append(new_beam2)
                             new_beams.append(new_beam2)
                         return new_beams
@@ -181,19 +188,23 @@ class Beam:
                             direction=Direction.EAST,
                             path=[],
                             children=[],
-                            )
+                        )
                         new_beam2 = Beam(
                             origin=new_position2,
                             position=new_position2,
                             direction=Direction.WEST,
                             path=[],
                             children=[],
-                            )
+                        )
                         new_beams = []
-                        if (0 <= new_beam1.position.x < max_x) and (0 <= new_beam1.position.y < max_y):
+                        if (0 <= new_beam1.position.x < max_x) and (
+                            0 <= new_beam1.position.y < max_y
+                        ):
                             self.children.append(new_beam1)
                             new_beams.append(new_beam1)
-                        if (0 <= new_beam2.position.x < max_x) and (0 <= new_beam2.position.y < max_y):
+                        if (0 <= new_beam2.position.x < max_x) and (
+                            0 <= new_beam2.position.y < max_y
+                        ):
                             self.children.append(new_beam2)
                             new_beams.append(new_beam2)
                         return new_beams
@@ -206,13 +217,13 @@ class Beam:
                             children=[],
                         )
             case TileType.EMPTY:
-                        new_beam = Beam(
-                            origin=self.origin,
-                            position=self.position.move(self.direction),
-                            direction=self.direction,
-                            path=path,
-                            children=[],
-                        )
+                new_beam = Beam(
+                    origin=self.origin,
+                    position=self.position.move(self.direction),
+                    direction=self.direction,
+                    path=path,
+                    children=[],
+                )
             case _:
                 raise Exception("Unknown tile type")
         if 0 <= new_beam.position.x < max_x and 0 <= new_beam.position.y < max_y:
@@ -229,7 +240,6 @@ class Tile:
     has_been_south: bool = False
     has_been_east: bool = False
     has_been_west: bool = False
-
 
     def __str__(self):
         match self.type:
@@ -267,19 +277,19 @@ def print_grid(grid: Dict[Point, Tile], max_x: int, max_y: int, rays=[]):
         for point in ray.path:
             ray_map[point] = ray
             ray_posititions.add(point)
-            
+
     for y in range(max_y):
         for x in range(max_x):
             # tile = grid.get(Point(x, y))
             point = Point(x, y)
             tile = grid[Point(x, y)]
-            if tile.type == TileType.EMPTY  and point in ray_posititions:
+            if tile.type == TileType.EMPTY and point in ray_posititions:
                 print(ray_map[point], end="")
             else:
                 if tile is None:
                     print(".", end="")
                 # elif tile.is_energized:
-                    # print("#", end="")
+                # print("#", end="")
                 else:
                     print(tile, end="")
         print("")
@@ -301,7 +311,7 @@ def part1(values_list) -> str:
             grid[Point(x, y)] = tile
     max_x = len(values_list[0])
     max_y = len(values_list)
-        
+
     start_beam = Beam(
         origin=Point(0, 0),
         position=Point(0, 0),

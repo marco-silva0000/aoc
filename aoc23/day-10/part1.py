@@ -7,20 +7,24 @@ from itertools import cycle
 
 log = get_logger()
 
+
 class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    GOLD = '\033[0;33;46m'
-    UNDERLINE = '\033[4m'
+    HEADER = "\033[95m"
+    OKBLUE = "\033[94m"
+    OKCYAN = "\033[96m"
+    OKGREEN = "\033[92m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m"
+    GOLD = "\033[0;33;46m"
+    UNDERLINE = "\033[4m"
+
 
 ## Direction str enum
 from enum import StrEnum, Enum
+
+
 class Direction(StrEnum):
     NORTH = "U"
     NORTHSOUTH = "|"
@@ -64,8 +68,8 @@ class Direction(StrEnum):
     #     raise ValueError(cls.__name__ + ' has no value matching "' + s + '"')
 
 
-
 Point = Tuple[int, int]
+
 
 @dataclass
 class PointAttr:
@@ -118,7 +122,16 @@ class PointAttr:
     def pipe_neighbours(self, grid: Dict[Point, Self]):
         if self.direction == Direction.START:
             self.direction = Direction.NORTHSOUTH
-        return list(filter(lambda p: p.is_pipe and p.dist_from_start is None, map(lambda p: grid[p], [n for n in self.neighbours() if n in grid.keys()])))
+        return list(
+            filter(
+                lambda p: p.is_pipe and p.dist_from_start is None,
+                map(
+                    lambda p: grid[p],
+                    [n for n in self.neighbours() if n in grid.keys()],
+                ),
+            )
+        )
+
 
 Grid = Dict[Point, PointAttr]
 
@@ -134,13 +147,14 @@ def print_map(grid: Grid, dists=False, loop_c=True):
                     if dists:
                         print(grid[p].dist_from_start % 9, end="")
                     else:
-                        print(f"{bcolors.GOLD}{grid[p].direction}{bcolors.ENDC}", end="")
+                        print(
+                            f"{bcolors.GOLD}{grid[p].direction}{bcolors.ENDC}", end=""
+                        )
                 else:
                     print(f"{grid[p].direction}", end="")
             else:
                 print(" ", end="")
         print()
-
 
 
 def part1(values_list) -> str:
@@ -150,18 +164,22 @@ def part1(values_list) -> str:
             is_pipe = c != "." or c == "S"
             direction = Direction(c)
             grid[(x, y)] = PointAttr(
-                    x,
-                    y,
+                x,
+                y,
                 c,
                 direction,
                 is_pipe,
             )
     print_map(grid)
-    start_point = list(filter(lambda p: grid[p].direction == Direction.START, grid.keys()))[0]
+    start_point = list(
+        filter(lambda p: grid[p].direction == Direction.START, grid.keys())
+    )[0]
     start = grid[start_point]
     log.debug(start, start_point=start_point)
     start.dist_from_start = 0
-    next_neighbours = list([(n, start.dist_from_start) for n in start.pipe_neighbours(grid)])
+    next_neighbours = list(
+        [(n, start.dist_from_start) for n in start.pipe_neighbours(grid)]
+    )
     queue = []
     queue.extend(next_neighbours)
     while len(queue) > 0:
@@ -170,7 +188,9 @@ def part1(values_list) -> str:
         current, prev_dist = queue.pop(0)
         # log.debug(current)
         current.dist_from_start = prev_dist + 1
-        next_neighbours = list([(n, current.dist_from_start) for n in current.pipe_neighbours(grid)])
+        next_neighbours = list(
+            [(n, current.dist_from_start) for n in current.pipe_neighbours(grid)]
+        )
         queue.extend(next_neighbours)
 
     print_map(grid, dists=True)
@@ -181,6 +201,5 @@ def part1(values_list) -> str:
     # log.debug(loop)
     furthest = max(mapped_values, key=lambda p: p.dist_from_start)
     log.debug("furthest", furthest=furthest)
-
 
     return str(furthest.dist_from_start)

@@ -9,23 +9,24 @@ from enum import Enum, StrEnum
 logger = structlog.get_logger()
 
 
-
 class Point(StrEnum):
     EMPTY = "."
     CUBE = "#"
     ROUNDED = "O"
 
+
 class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    GOLD = '\033[0;33;46m'
-    UNDERLINE = '\033[4m'
+    HEADER = "\033[95m"
+    OKBLUE = "\033[94m"
+    OKCYAN = "\033[96m"
+    OKGREEN = "\033[92m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m"
+    GOLD = "\033[0;33;46m"
+    UNDERLINE = "\033[4m"
+
 
 def print_platform(platform, max_x=0, max_y=0, highlight_x=None, highlight_y=None):
     for y in range(max_y):
@@ -36,8 +37,10 @@ def print_platform(platform, max_x=0, max_y=0, highlight_x=None, highlight_y=Non
                 print(platform[(x, y)], end="")
         print()
 
+
 def tilt_up(platform, max_x=0, max_y=0):
     from structlog import get_logger
+
     logger = get_logger()
     # logger = logger.bind(platform=platform)
     free_spots = [None] * max_x
@@ -53,14 +56,15 @@ def tilt_up(platform, max_x=0, max_y=0):
                 if free_spots[x] is not None:
                     # logger.debug("found cube", free_spots=free_spots)
                     free_spots[x] = None
-            else: # ROUNDED
-                if (free_spot:= free_spots[x]) is not None:
+            else:  # ROUNDED
+                if (free_spot := free_spots[x]) is not None:
                     # logger.debug("there's a free spot, gonna move", free_spots=free_spots)
                     platform[(x, free_spot)] = Point.ROUNDED
                     platform[(x, y)] = Point.EMPTY
                     free_spots[x] += 1
             # print_platform(platform, max_x=max_x, max_y=max_y, highlight_x=x, highlight_y=y)
     return platform
+
 
 def part1(values_list) -> str:
     result = []
@@ -81,6 +85,6 @@ def part1(values_list) -> str:
     result = 0
     for (_, y), value in new_platform.items():
         if value == Point.ROUNDED:
-            result += (max_y - y)
+            result += max_y - y
     print(result)
     return str(result)

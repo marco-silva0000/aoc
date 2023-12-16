@@ -38,6 +38,7 @@ def run_part1():
     parsed_data = parse(data)
     print(part1(parsed_data))
 
+
 def test_part1():
     data = """...#......
 .......#..
@@ -55,6 +56,7 @@ def test_part1():
     print(result)
     assert result == "374"
 
+
 def test_sm_part1():
     data = """#.#
 #.#
@@ -64,6 +66,7 @@ def test_sm_part1():
     result = part1(parsed_data)
     print(result)
     assert result == "43"
+
 
 def test_gaps_part1():
     data = """#..#
@@ -77,6 +80,7 @@ def test_gaps_part1():
     print(result)
     assert result == "93"
 
+
 def test_edge_part1():
     data = """#...
 ....
@@ -88,6 +92,7 @@ def test_edge_part1():
     result = part1(parsed_data)
     print(result)
     assert result == "12"
+
 
 def test_square_part1():
     data = """........
@@ -101,6 +106,7 @@ def test_square_part1():
     print(result)
     assert result == "32"
 
+
 def test_join_square_part1():
     data = """........
 ...##...
@@ -112,6 +118,7 @@ def test_join_square_part1():
     result = part1(parsed_data)
     print(result)
     assert result == "8"
+
 
 def test_part2():
     data = """...#......
@@ -130,6 +137,7 @@ def test_part2():
     print(result)
     assert result == "374"
 
+
 def test_sm_part2():
     data = """#.#
 #.#
@@ -139,6 +147,7 @@ def test_sm_part2():
     result = part2(parsed_data)
     print(result)
     assert result == "43"
+
 
 def test_gaps_part2():
     data = """#..#
@@ -152,6 +161,7 @@ def test_gaps_part2():
     print(result)
     assert result == "93"
 
+
 def test_edge_part2():
     data = """#...
 ....
@@ -163,6 +173,7 @@ def test_edge_part2():
     result = part2(parsed_data)
     print(result)
     assert result == "12"
+
 
 def test_square_part2():
     data = """........
@@ -176,6 +187,7 @@ def test_square_part2():
     print(result)
     assert result == "32"
 
+
 def test_join_square_part2():
     data = """........
 ...##...
@@ -187,6 +199,7 @@ def test_join_square_part2():
     result = part2(parsed_data)
     print(result)
     assert result == "8"
+
 
 def test_times10_part2():
     data = """...#......
@@ -204,6 +217,7 @@ def test_times10_part2():
     result = part2(parsed_data, expansion=10)
     print(result)
     assert result == "1030"
+
 
 def test_times100_part2():
     data = """...#......

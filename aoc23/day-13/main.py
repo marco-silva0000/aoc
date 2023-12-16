@@ -37,6 +37,7 @@ if __name__ == "__main__":
 #     parsed_data = parse(data)
 #     print(part1(parsed_data))
 
+
 def test_part1():
     data = """#.##..##.
 ..#.##.#.

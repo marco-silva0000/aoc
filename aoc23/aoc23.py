@@ -38,22 +38,22 @@ def main(*args, **kwargs):
         part2_tests = filter(lambda x: x.endswith("_part2"), tests)
         if part == "all":
             for test in part1_tests:
-                t=getattr(module, test)()
+                t = getattr(module, test)()
                 print(t)
             for test in part2_tests:
-                t=getattr(module, test)()
+                t = getattr(module, test)()
                 print(t)
             print(module.part1(parsed_data))
             print(module.part2(parsed_data))
         elif part == "1":
             for test in part1_tests:
-                t=getattr(module, test)()
+                t = getattr(module, test)()
                 print(t)
             print(module.part1(parsed_data))
         elif part == "2":
             print("Only Part 2")
             for test in part2_tests:
-                t=getattr(module, test)()
+                t = getattr(module, test)()
                 print(t)
             print(module.part2(parsed_data))
         else:

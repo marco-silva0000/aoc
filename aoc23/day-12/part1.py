@@ -16,6 +16,8 @@ log = get_logger()
 ????.######..#####. 1,6,5
 ?###???????? 3,2,1
 """
+
+
 class Spring(StrEnum):
     OPERATIONAL = "."
     DAMAGED = "#"
@@ -68,13 +70,15 @@ def validate_permutations(permutations, groups, i=None):
                 pass
 
     if len(valid_permutations) == 0:
-        log.debug("no valid permutations", permutations=permutations, groups=groups, i=i)
+        log.debug(
+            "no valid permutations", permutations=permutations, groups=groups, i=i
+        )
         raise Exception("no valid permutations")
     return valid_permutations
 
+
 def parse_line(springs, groups, i=None):
     log.debug("parse_line", springs=springs, groups=groups, i=i)
-
 
     spring_iter = iter(springs)
     current_spring = next(spring_iter)
@@ -121,7 +125,12 @@ def parse_line(springs, groups, i=None):
     any_damaged = lambda x: any(spring == Spring.DAMAGED for spring in x)
     for spring in springs:
         spring = Spring(spring)
-        log.debug("spring", spring=spring, current_springs=current_springs, spring_groups=spring_groups)
+        log.debug(
+            "spring",
+            spring=spring,
+            current_springs=current_springs,
+            spring_groups=spring_groups,
+        )
         if any_damaged and len(current_springs) == group_num:
             try:
                 group_num = next(group_iter)
@@ -148,7 +157,6 @@ def parse_line(springs, groups, i=None):
                             current_springs.append(spring)
 
     log.debug(spring_groups)
-
 
     return result
 

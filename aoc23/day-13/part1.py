@@ -5,6 +5,7 @@ import structlog
 from dataclasses import dataclass
 from itertools import cycle
 import numpy as np
+
 logger = structlog.get_logger()
 
 # def get_candidates(counts):
@@ -103,7 +104,7 @@ logger = structlog.get_logger()
 #                 return 0
 #             prev_r = r
 #     return candidate
-#     
+#
 # def get_vertical_reflection(pattern):
 #     from structlog import get_logger
 #     logger = get_logger()
@@ -146,8 +147,10 @@ logger = structlog.get_logger()
 #             prev_r = r
 #     return candidate
 
+
 def get_reflection(pattern, rotate=False):
     from structlog import get_logger
+
     logger = get_logger()
     pattern = np.array(pattern)
     if rotate:
@@ -158,19 +161,19 @@ def get_reflection(pattern, rotate=False):
         print("pre flip lhs")
         for y, line in enumerate(lhs):
             for x, c in enumerate(line):
-                print(c, end='')
+                print(c, end="")
             print()
         lhs = np.flipud(lhs)
         # logger.debug(lhs=lhs, rhs=rhs)
         print("post flip lhs")
         for y, line in enumerate(lhs):
             for x, c in enumerate(line):
-                print(c, end='')
+                print(c, end="")
             print()
         print("rhs")
         for y, line in enumerate(rhs):
             for x, c in enumerate(line):
-                print(c, end='')
+                print(c, end="")
             print()
         zippy = zip(lhs, rhs)
         for l, r in zippy:
@@ -186,17 +189,19 @@ def get_reflection(pattern, rotate=False):
 
 def get_reflections(pattern):
     from structlog import get_logger
+
     logger = get_logger()
     logger.debug("get_reflections", pattern=pattern)
     horizontal = get_reflection(pattern)
     vertical = get_reflection(pattern, rotate=True)
     return horizontal, vertical
 
+
 def part1(values_list) -> str:
     maps = []
     current_map = []
     for values in values_list:
-        values = [int(c == '#') for c in values]
+        values = [int(c == "#") for c in values]
         # log.debug("values", values=values)
         if not values:
             maps.append(current_map)
@@ -217,8 +222,8 @@ def part1(values_list) -> str:
 
     result = 0
     for h, v in reflections:
-        result += h*100 + v
-        
+        result += h * 100 + v
+
     logger.debug("result", result=result)
 
     return str(result)

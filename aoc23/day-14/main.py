@@ -54,6 +54,7 @@ O.#..O.#.#
     result = part1(parsed_data)
     assert result == "136"
 
+
 def test_spin1_part2():
     data = """O....#....
 O.OO#....#
@@ -69,6 +70,7 @@ O.#..O.#.#
     log.debug(parsed_data)
     result = part2(parsed_data, spins=1)
     assert result == "87"
+
 
 def test_spin2_part2():
     data = """O....#....
@@ -86,6 +88,7 @@ O.#..O.#.#
     result = part2(parsed_data, spins=2)
     assert result == "69"
 
+
 def test_spin3_part2():
     data = """O....#....
 O.OO#....#
@@ -101,6 +104,7 @@ O.#..O.#.#
     log.debug(parsed_data)
     result = part2(parsed_data, spins=3)
     assert result == "69"
+
 
 def test_part2():
     data = """O....#....

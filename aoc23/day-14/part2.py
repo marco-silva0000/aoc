@@ -10,36 +10,46 @@ from time import sleep
 logger = structlog.get_logger()
 
 
-
 class Point(StrEnum):
     EMPTY = "."
     CUBE = "#"
     ROUNDED = "O"
 
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    GOLD = '\033[0;33;46m'
-    UNDERLINE = '\033[4m'
 
-def print_platform(platform, max_x=0, max_y=0, highlight_x=None, highlight_y=None, flush=False):
+class bcolors:
+    HEADER = "\033[95m"
+    OKBLUE = "\033[94m"
+    OKCYAN = "\033[96m"
+    OKGREEN = "\033[92m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m"
+    GOLD = "\033[0;33;46m"
+    UNDERLINE = "\033[4m"
+
+
+def print_platform(
+    platform, max_x=0, max_y=0, highlight_x=None, highlight_y=None, flush=False
+):
     output = ""
     for y in range(max_y):
         for x in range(max_x):
             sleep(0.01)
             if (x, y) == (highlight_x, highlight_y):
-                print(f"{bcolors.GOLD}{platform[(x, y)]}{bcolors.ENDC}", end="", flush=flush)
+                print(
+                    f"{bcolors.GOLD}{platform[(x, y)]}{bcolors.ENDC}",
+                    end="",
+                    flush=flush,
+                )
             else:
                 print(platform[(x, y)], end="", flush=flush)
         print(flush=flush)
 
-def print_platform(platform, max_x=0, max_y=0, highlight_x=None, highlight_y=None, flush=False):
+
+def print_platform(
+    platform, max_x=0, max_y=0, highlight_x=None, highlight_y=None, flush=False
+):
     output = "\r"
     for y in range(max_y):
         for x in range(max_x):
@@ -58,6 +68,7 @@ def print_platform(platform, max_x=0, max_y=0, highlight_x=None, highlight_y=Non
 
 def tilt_up(platform, max_x=0, max_y=0):
     from structlog import get_logger
+
     logger = get_logger()
     # logger = logger.bind(platform=platform)
     free_spots = [None] * max_x
@@ -73,8 +84,8 @@ def tilt_up(platform, max_x=0, max_y=0):
                 if free_spots[x] is not None:
                     # logger.debug("found cube", free_spots=free_spots)
                     free_spots[x] = None
-            else: # ROUNDED
-                if (free_spot:= free_spots[x]) is not None:
+            else:  # ROUNDED
+                if (free_spot := free_spots[x]) is not None:
                     # logger.debug("there's a free spot, gonna move", free_spots=free_spots)
                     platform[(x, free_spot)] = Point.ROUNDED
                     platform[(x, y)] = Point.EMPTY
@@ -88,8 +99,9 @@ def count_stones(platform, max_y, print=False):
     for (x, y), value in platform.items():
         # print_platform(platform, max_x=max_y, max_y=max_y, highlight_x=x, highlight_y=y, flush=True)
         if value == Point.ROUNDED:
-            result += (max_y - y)
+            result += max_y - y
     return result
+
 
 def rotate_right(platform, max_x=0, max_y=0):
     new_platform = {}
@@ -98,8 +110,10 @@ def rotate_right(platform, max_x=0, max_y=0):
             new_platform[(max_y - y - 1, x)] = platform[(x, y)]
     return new_platform
 
+
 def cycle_platform(platform, max_x=0, max_y=0):
     from structlog import get_logger
+
     logger = get_logger()
     logger = logger.bind(max_x=max_x, max_y=max_y)
     # logger.debug("cycle_platform")
@@ -129,14 +143,16 @@ def cycle_platform(platform, max_x=0, max_y=0):
     # print_platform(new_platform, max_x=max_x, max_y=max_y)
     return new_platform
 
+
 def generate_map_hashkey(platform, max_x=0, max_y=0):
     result = ()
     for y in range(max_y):
         part = ()
         for x in range(max_x):
-            part += ('.#O'.index(platform[(x, y)].value), )
-        result += (part, )
+            part += (".#O".index(platform[(x, y)].value),)
+        result += (part,)
     return hash(result)
+
 
 def part2(values_list, spins=1000000000) -> str:
     result = []
@@ -170,7 +186,15 @@ def part2(values_list, spins=1000000000) -> str:
             n_loops = delta // size
             spin += n_loops * size
             looped = True
-            logger.debug("looped", spin=spin, n_loops=n_loops, size=size, delta=delta, index=index, hashkey=hashkey)
+            logger.debug(
+                "looped",
+                spin=spin,
+                n_loops=n_loops,
+                size=size,
+                delta=delta,
+                index=index,
+                hashkey=hashkey,
+            )
 
         tail.append(hashkey)
         seen_keys.add(hashkey)

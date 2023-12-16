@@ -31,6 +31,7 @@ if __name__ == "__main__":
     print(part1(parsed_data))
     print(part2(parsed_data, folding=5))
 
+
 def test_part1():
     data = """???.### 1,1,3
 .??..??...?##. 1,1,3
@@ -42,6 +43,7 @@ def test_part1():
     log.debug(parsed_data)
     result = part1(parsed_data)
     assert result == "21"
+
 
 def run_part1():
     data = get_data()
@@ -58,7 +60,7 @@ def test_line1_part1():
 
 
 def test_line2_part1():
-    data=""".??..??...?##. 1,1,3"""
+    data = """.??..??...?##. 1,1,3"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part1(parsed_data)
@@ -66,7 +68,7 @@ def test_line2_part1():
 
 
 def test_line3_part1():
-    data="""?#?#?#?#?#?#?#? 1,3,1,6"""
+    data = """?#?#?#?#?#?#?#? 1,3,1,6"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part1(parsed_data)
@@ -74,7 +76,7 @@ def test_line3_part1():
 
 
 def test_line4_part1():
-    data="""????.#...#... 4,1,1"""
+    data = """????.#...#... 4,1,1"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part1(parsed_data)
@@ -82,7 +84,7 @@ def test_line4_part1():
 
 
 def test_line5_part1():
-    data="""????.######..#####. 1,6,5"""
+    data = """????.######..#####. 1,6,5"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part1(parsed_data)
@@ -90,21 +92,20 @@ def test_line5_part1():
 
 
 def test_line6_part1():
-    data="""?###???????? 3,2,1"""
+    data = """?###???????? 3,2,1"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part1(parsed_data)
     assert result == "10"
 
+
 def test_antepen_part1():
-    data="""#.?#?.#.????.???# 1,3,1,2,4"""
+    data = """#.?#?.#.????.???# 1,3,1,2,4"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part1(parsed_data)
     print(result)
     assert result == "3"
-
-
 
 
 def test_line1_folding1_part2():
@@ -116,7 +117,7 @@ def test_line1_folding1_part2():
 
 
 def test_line2_folding1_part2():
-    data=""".??..??...?##. 1,1,3"""
+    data = """.??..??...?##. 1,1,3"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part2(parsed_data, folding=1)
@@ -124,7 +125,7 @@ def test_line2_folding1_part2():
 
 
 def test_line3_folding1_part2():
-    data="""?#?#?#?#?#?#?#? 1,3,1,6"""
+    data = """?#?#?#?#?#?#?#? 1,3,1,6"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part2(parsed_data, folding=1)
@@ -132,7 +133,7 @@ def test_line3_folding1_part2():
 
 
 def test_line4_folding1_part2():
-    data="""????.#...#... 4,1,1"""
+    data = """????.#...#... 4,1,1"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part2(parsed_data, folding=1)
@@ -140,7 +141,7 @@ def test_line4_folding1_part2():
 
 
 def test_line5_folding1_part2():
-    data="""????.######..#####. 1,6,5"""
+    data = """????.######..#####. 1,6,5"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part2(parsed_data, folding=1)
@@ -148,19 +149,21 @@ def test_line5_folding1_part2():
 
 
 def test_line6_folding1_part2():
-    data="""?###???????? 3,2,1"""
+    data = """?###???????? 3,2,1"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part2(parsed_data, folding=1)
     assert result == "10"
 
+
 def test_antepen_folding1_part2():
-    data="""#.?#?.#.????.???# 1,3,1,2,4"""
+    data = """#.?#?.#.????.???# 1,3,1,2,4"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part2(parsed_data, folding=1)
     print(result)
     assert result == "3"
+
 
 def test_folding1_part2():
     data = """???.### 1,1,3
@@ -174,12 +177,14 @@ def test_folding1_part2():
     result = part2(parsed_data, folding=1)
     assert result == "21"
 
+
 def test_line0_part2():
     data = """.# 1"""
     parsed_data = parse(data)
     # log.debug(parsed_data)
     result = part2(parsed_data, folding=5)
     assert result == "1"
+
 
 def test_line1_part2():
     data = """???.### 1,1,3"""
@@ -190,7 +195,7 @@ def test_line1_part2():
 
 
 def test_line2_part2():
-    data=""".??..??...?##. 1,1,3"""
+    data = """.??..??...?##. 1,1,3"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part2(parsed_data, folding=5)
@@ -198,7 +203,7 @@ def test_line2_part2():
 
 
 def test_line3_part2():
-    data="""?#?#?#?#?#?#?#? 1,3,1,6"""
+    data = """?#?#?#?#?#?#?#? 1,3,1,6"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part2(parsed_data, folding=5)
@@ -206,7 +211,7 @@ def test_line3_part2():
 
 
 def test_line4_part2():
-    data="""????.#...#... 4,1,1"""
+    data = """????.#...#... 4,1,1"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part2(parsed_data, folding=5)
@@ -214,7 +219,7 @@ def test_line4_part2():
 
 
 def test_line5_part2():
-    data="""????.######..#####. 1,6,5"""
+    data = """????.######..#####. 1,6,5"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part2(parsed_data, folding=5)
@@ -222,7 +227,7 @@ def test_line5_part2():
 
 
 def test_line6_part2():
-    data="""?###???????? 3,2,1"""
+    data = """?###???????? 3,2,1"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part2(parsed_data, folding=5)

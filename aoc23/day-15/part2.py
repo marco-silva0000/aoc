@@ -19,6 +19,7 @@ class Hashy(str):
 
         """
         from structlog import get_logger
+
         logger = get_logger()
         logger.bind(str=self)
         current_value = 0
@@ -29,19 +30,24 @@ class Hashy(str):
             current_value %= 256
         return current_value
 
+
 @dataclass()
 class Lens:
     focal_val: int
     label: str
+
     def __str__(self):
         return f"{self.label} {self.focal_val}"
+
     def __repr__(self) -> str:
         return f"{self.label} {self.focal_val}"
+
 
 @dataclass()
 class Box:
     lenses: List[Lens]
     label: int
+
     def find_lens_index(self, label: str) -> int:
         # return map(lambda lens: lens.label == label, self.lenses).index(True)
         for i, lens in enumerate(self.lenses):
@@ -56,17 +62,18 @@ class Box:
         box_power = self.label + 1
         lens_power = 0
         for i, lens in enumerate(self.lenses):
-            lens_power += (i+1) * lens.focal_val
+            lens_power += (i + 1) * lens.focal_val
         return box_power * lens_power
-        
 
 
 class Operation(Enum):
-    REMOVE = '-'
-    FOCUS = '='
+    REMOVE = "-"
+    FOCUS = "="
+
 
 def part2(values_list) -> str:
     from structlog import get_logger
+
     logger = get_logger()
     logger.debug("part")
     values_list = values_list[0]
@@ -81,7 +88,7 @@ def part2(values_list) -> str:
             label, focus_val = step.split("=")
             logger = logger.bind(focus_val=focus_val)
         logger = logger.bind(operation=operation, label=label)
-            
+
         box_id = hash(Hashy(label))
         logger.debug(box_id)
         try:
@@ -93,12 +100,12 @@ def part2(values_list) -> str:
         logger = logger.bind(lens_index=lens_index)
         match operation:
             case Operation.REMOVE:
-                logger.debug('remove')
+                logger.debug("remove")
                 if lens_index is not None:
                     box.lenses.pop(lens_index)
                     mappy[box_id] = box
             case Operation.FOCUS:
-                logger.debug('focus')
+                logger.debug("focus")
                 v = int(focus_val)
                 lens = Lens(v, label)
                 if lens_index is not None:
@@ -117,8 +124,6 @@ def part2(values_list) -> str:
         print(box.power)
         print()
     result = sum([box.power for box in mappy.values()])
-
-
 
     # structlog.contextvars.bind_contextvars(
     #     iteration=i,

@@ -7,6 +7,7 @@ from itertools import cycle
 
 logger = structlog.get_logger()
 
+
 class Hashy(str):
     def __hash__(self):
         """
@@ -17,6 +18,7 @@ class Hashy(str):
 
         """
         from structlog import get_logger
+
         logger = get_logger()
         logger.bind(str=self)
         current_value = 0
@@ -26,6 +28,7 @@ class Hashy(str):
             current_value *= 17
             current_value %= 256
         return current_value
+
 
 def part1(values_list) -> str:
     # from structlog import get_logger

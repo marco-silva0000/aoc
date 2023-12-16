@@ -7,6 +7,7 @@ from itertools import cycle
 
 log = get_logger()
 
+
 @dataclass
 class Point:
     x: int
@@ -30,11 +31,11 @@ class Point:
         elif self.y == other.y:
             return self.x < other.x
         return False
-    
+
+
 def print_values(values_list):
     for line in values_list:
         print(line)
-
 
 
 def print_world(world, min_x, max_x, min_y, max_y, lengths=False):
@@ -52,7 +53,7 @@ def print_world(world, min_x, max_x, min_y, max_y, lengths=False):
                 else:
                     print(world[(x, y)], end="")
             else:
-                print('.', end="")
+                print(".", end="")
         print()
 
 
@@ -84,10 +85,27 @@ def part1(values_list) -> str:
         for g2 in galaxies.keys():
             if g1 == g2:
                 continue
-            x_between = len([x for x in marked_x_for_expansion if (x > g1[0] and x < g2[0]) or (x > g2[0] and x < g1[0])])
-            y_between = len([y for y in marked_y_for_expansion if (y > g1[1] and y < g2[1]) or (y > g2[1] and y < g1[1])])
-            distance = abs(g1[0] - (g2[0] )) + x_between + abs(g1[1] - (g2[1] ))+ y_between
-            if (g1, g2) not in distances_map.keys() and (g2, g1) not in distances_map.keys():
+            x_between = len(
+                [
+                    x
+                    for x in marked_x_for_expansion
+                    if (x > g1[0] and x < g2[0]) or (x > g2[0] and x < g1[0])
+                ]
+            )
+            y_between = len(
+                [
+                    y
+                    for y in marked_y_for_expansion
+                    if (y > g1[1] and y < g2[1]) or (y > g2[1] and y < g1[1])
+                ]
+            )
+            distance = (
+                abs(g1[0] - (g2[0])) + x_between + abs(g1[1] - (g2[1])) + y_between
+            )
+            if (g1, g2) not in distances_map.keys() and (
+                g2,
+                g1,
+            ) not in distances_map.keys():
                 # log.debug("distance", g1=g1, g2=g2, distance=distance, x_between=x_between, y_between=y_between, id1=galaxies[g1], id2=galaxies[g2])
                 distances_map[(g1, g2)] = distance
 
@@ -98,32 +116,30 @@ def part1(values_list) -> str:
     print(result)
     return str(sum(distances_map.values()))
 
-
-
     new_height = height + len(marked_y_for_expansion)
     new_length = length + len(marked_x_for_expansion)
     for i, x in enumerate(marked_x_for_expansion):
         log.debug("inserting", x=x)
         for y in range(0, height):
-            values_list[y].insert(x+1, "x")
+            values_list[y].insert(x + 1, "x")
         print_values(values_list)
 
     for i, y in enumerate(marked_y_for_expansion):
         log.debug("inserting", y=y)
-        values_list.insert(y+i, ["x"] * (new_length))
+        values_list.insert(y + i, ["x"] * (new_length))
         print_values(values_list)
 
-    world = {} 
+    world = {}
     galaxies = {}
     length = new_length
     height = new_height
     for y, line in enumerate(values_list):
         for x, value in enumerate(line):
-            point = Point(x, y, '.')
+            point = Point(x, y, ".")
             if value == "#":
                 point.value = "#"
-                galaxies[(x,y)] = point
-            world[(x,y)] = point
+                galaxies[(x, y)] = point
+            world[(x, y)] = point
     print_world(world, 0, length, 0, height)
 
     distances_map = {}
@@ -134,9 +150,12 @@ def part1(values_list) -> str:
                 continue
             distance = abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
             distances.append(distance)
-            if (p1, p2) not in distances_map.keys() and (p2, p1) not in distances_map.keys():
+            if (p1, p2) not in distances_map.keys() and (
+                p2,
+                p1,
+            ) not in distances_map.keys():
                 distances_map[(p1, p2)] = distance
-                
+
         world[p1].distances = distances
     print_world(world, 0, length, 0, height, lengths=True)
     all_distances = list(distances_map.values())
@@ -145,4 +164,3 @@ def part1(values_list) -> str:
     print_world(world, 0, length, 0, height, lengths=True)
     print(len(all_distances))
     return str(sum(all_distances))
-        
