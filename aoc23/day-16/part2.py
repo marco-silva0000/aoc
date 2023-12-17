@@ -7,6 +7,7 @@ from itertools import cycle
 from enum import Enum, StrEnum
 from copy import deepcopy
 
+
 logger = structlog.get_logger()
 
 # Point = Tuple[int, int]

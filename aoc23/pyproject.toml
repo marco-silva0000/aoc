@@ -5,7 +5,7 @@ description = "Advent of code 23"
 authors = ["Marco Silva <mail@marco-silva.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.12"
 black = "^22.10.0"
 sympy = "^1.11.1"
 defaultlist = "^1.0.0"

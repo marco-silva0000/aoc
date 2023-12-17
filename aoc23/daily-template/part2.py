@@ -18,4 +18,7 @@ def part2(values_list) -> str:
     # structlog.contextvars.bind_contextvars(
     #     iteration=i,
     # )
+    structlog.configure(
+        wrapper_class=structlog.make_filtering_bound_logger(logging.DEBUG),
+    )
     return ""
