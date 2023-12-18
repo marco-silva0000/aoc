@@ -43,19 +43,19 @@ def main(*args, **kwargs):
             for test in part2_tests:
                 t = getattr(module, test)()
                 print(t)
-            print(module.part1(parsed_data))
-            print(module.part2(parsed_data))
+            print(module.run_part1(parsed_data))
+            print(module.run_part2(parsed_data))
         elif part == "1":
             for test in part1_tests:
                 t = getattr(module, test)()
                 print(t)
-            print(module.part1(parsed_data))
+            print(module.run_part1(parsed_data))
         elif part == "2":
             print("Only Part 2")
             for test in part2_tests:
                 t = getattr(module, test)()
                 print(t)
-            print(module.part2(parsed_data))
+            print(module.run_part2(parsed_data))
         else:
             print("Part must be 1, 2, or all")
         print("Module:", module)
