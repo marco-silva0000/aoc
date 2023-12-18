@@ -7,3 +7,16 @@ fn main() -> miette::Result<()> {
     println!("{}", result);
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_process() -> miette::Result<()> {
+        todo!("haven't built test yet");
+        let input = "";
+        assert_eq!("", process(input)?);
+        Ok(())
+    }
+}
