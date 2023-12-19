@@ -1,3 +1,3 @@
 pub fn process(_input: &str) -> miette::Result<String> {
-    todo!("day {{day}} - part 2");
+    todo!("day 19 - part 1");
 }
