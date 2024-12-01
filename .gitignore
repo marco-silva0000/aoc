@@ -13,3 +13,5 @@ target/
 .idea/
 .vscode/
 
+!daily-template/input*
+*input
