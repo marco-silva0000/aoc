@@ -1,52 +1,66 @@
-from collections import Counter
+import os
+import structlog
+import pytest
 
-numbers_dict = {
-    key: index
-    for index, key in enumerate(
-        "one two three four five six seven eight nine".split(" "), start=1
-    )
-}
-digits_dict = {str(key): index for index, key in enumerate(range(1, 10), start=1)}
-numbers_dict.update(digits_dict)
-reverse_numbers_dict = {key[::-1]: value for key, value in numbers_dict.items()}
+log = structlog.get_logger()
 
-f = open("day-1/test.txt")
-f = open("day-1/input.txt")
+from .part1 import part1
+from .part2 import part2
 
 
-part1_result = []
-part2_result = []
-p1_1 = []
-p1_2 = []
-p2_1 = []
-p2_2 = []
-for l in f.readlines():
-    l = l.strip()
-    print(l)
-    data = l.split()
-    p1_1.append(data[0])
-    p1_2.append(data[1])
-    p2_1.append(data[0])
-    p2_2.append(data[1])
-
-p1_1 = sorted(p1_1)
-p1_2 = sorted(p1_2)
-
-result1 = 0
-for i in range(len(p1_1)):
-    first = int(p1_1.pop(0))
-    second = int(p1_2.pop(0))
-    print(
-        f"diffing {first} with {second} in abs {first - second} adding it to {result1}"
-    )
-    result1 += abs(first - second)
+def parse(data: str):
+    # current_dir = os.path.dirname(os.path.abspath(__file__))
+    lines = data.splitlines()
+    values_list = []
+    for line in lines:
+        values_list.append(line)
+    return values_list
 
 
-print(result1)
+def get_data():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    f = open(f"{current_dir}/input.txt")
+    data = f.read()
+    f.close()
+    return data
 
-counter = Counter(p2_2)
-result2 = 0
-for val in p2_1:
-    result2 += int(val) * counter[val]
 
-print(result2)
+if __name__ == "__main__":
+    data = get_data()
+    parsed_data = parse(data)
+    print(part1(parsed_data))
+    print(part2(parsed_data))
+
+
+def run_part1(parsed_data):
+    print(part1(parsed_data))
+
+
+def run_part2(parsed_data):
+    print(part2(parsed_data))
+
+
+def test_part1():
+    data = """3   4
+4   3
+2   5
+1   3
+3   9
+3   3"""
+    parsed_data = parse(data)
+    log.debug(parsed_data)
+    result = part1(parsed_data)
+    assert result == "11"
+
+
+def test_part2():
+    data = """3   4
+4   3
+2   5
+1   3
+3   9
+3   3"""
+    parsed_data = parse(data)
+    log.debug(parsed_data)
+    result = part2(parsed_data)
+    assert result == "31"
