@@ -1,4 +1,4 @@
-use aoc24_::part1::process;
+use aoc24_2::part1::process;
 use miette::Context;
 
 fn main() -> miette::Result<()> {
@@ -8,16 +8,19 @@ fn main() -> miette::Result<()> {
     Ok(())
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn test_process() -> miette::Result<()> {
-        todo!("haven't built test yet");
-        let input = "";
+        let input = "7 6 4 2 1
+1 2 7 8 9
+9 7 6 2 1
+1 3 2 4 5
+8 6 4 4 1
+1 3 6 7 9";
         assert_eq!("", process(input)?);
-        Ok(())
+        Ok("2")
     }
 }
