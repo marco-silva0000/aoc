@@ -1,4 +1,4 @@
-use aoc24_::part1::process;
+use aoc24_3::part1::process;
 use miette::Context;
 
 fn main() -> miette::Result<()> {
@@ -7,7 +7,6 @@ fn main() -> miette::Result<()> {
     println!("{}", result);
     Ok(())
 }
-
 
 #[cfg(test)]
 mod tests {

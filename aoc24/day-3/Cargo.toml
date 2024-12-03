@@ -1,5 +1,5 @@
 [package]
-name = "aoc24_"
+name = "aoc24_3"
 version = "0.1.0"
 edition = "2021"
 
@@ -13,6 +13,7 @@ tracing-subscriber.workspace = true
 miette.workspace = true
 thiserror.workspace = true
 nom-supreme.workspace = true
+regex.workspace = true
 
 [dev-dependencies]
 rstest.workspace = true

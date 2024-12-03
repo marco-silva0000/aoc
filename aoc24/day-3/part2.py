@@ -28,9 +28,9 @@ def part2(values_list) -> str:
     matches = re.finditer(regex_all, data)
     do = True
     for match in matches:
-        print(match)
+        # print(match)
         match_group = str(match.group(0))
-        print(match_group)
+        # print(match_group)
         if match_group.startswith("mul"):
             match_type = "mul"
         elif match_group.startswith("don't"):
@@ -46,6 +46,7 @@ def part2(values_list) -> str:
             values = re.search(regex_mul2, match_group)
             val1 = int(values.group(1))
             val2 = int(values.group(2))
+            # print(f"mul({val1},{val2})")
             result += val1 * val2
 
     # structlog.contextvars.bind_contextvars(
