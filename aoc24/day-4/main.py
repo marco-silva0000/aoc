@@ -58,8 +58,17 @@ MXMXAXMASX"""
 
 
 def test_part2():
-    data = """"""
+    data = """MMMSXXMASM
+MSAMXMSMSA
+AMXSXMAAMM
+MSAMASMSMX
+XMASAMXAMM
+XXAMMXXAMA
+SMSMSASXSS
+SAXAMASAAA
+MAMMMXMMMM
+MXMXAXMASX"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part2(parsed_data)
-    assert result == ""
+    assert result == "9"
