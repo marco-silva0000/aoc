@@ -1,4 +1,6 @@
 import datetime
+import contextvars
+import logging
 
 
 def main(*args, **kwargs):
@@ -46,15 +48,21 @@ def main(*args, **kwargs):
             print(module.run_part1(parsed_data))
             print(module.run_part2(parsed_data))
         elif part == "1":
+            logging_ctx = contextvars.ContextVar("logging")
+            logging_ctx.set(logging.DEBUG)
             for test in part1_tests:
                 t = getattr(module, test)()
                 print(t)
+            logging_ctx.set(logging.INFO)
             print(module.run_part1(parsed_data))
         elif part == "2":
+            logging_ctx = contextvars.ContextVar("logging")
+            logging_ctx.set(logging.DEBUG)
             print("Only Part 2")
             for test in part2_tests:
                 t = getattr(module, test)()
                 print(t)
+            logging_ctx.set(logging.INFO)
             print(module.run_part2(parsed_data))
         else:
             print("Part must be 1, 2, or all")
