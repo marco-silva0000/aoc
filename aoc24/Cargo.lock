@@ -73,6 +73,96 @@ dependencies = [
 ]
 
 [[package]]
+name = "aoc24_4"
+version = "0.1.0"
+dependencies = [
+ "itertools",
+ "miette",
+ "nom",
+ "nom-supreme",
+ "rstest",
+ "test-log",
+ "thiserror 2.0.3",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "aoc24_5"
+version = "0.1.0"
+dependencies = [
+ "itertools",
+ "miette",
+ "nom",
+ "nom-supreme",
+ "rstest",
+ "test-log",
+ "thiserror 2.0.3",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "aoc24_6"
+version = "0.1.0"
+dependencies = [
+ "itertools",
+ "miette",
+ "nom",
+ "nom-supreme",
+ "rstest",
+ "test-log",
+ "thiserror 2.0.3",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "aoc24_7"
+version = "0.1.0"
+dependencies = [
+ "itertools",
+ "miette",
+ "nom",
+ "nom-supreme",
+ "rstest",
+ "test-log",
+ "thiserror 2.0.3",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "aoc24_8"
+version = "0.1.0"
+dependencies = [
+ "itertools",
+ "miette",
+ "nom",
+ "nom-supreme",
+ "rstest",
+ "test-log",
+ "thiserror 2.0.3",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "aoc24_9"
+version = "0.1.0"
+dependencies = [
+ "itertools",
+ "miette",
+ "nom",
+ "nom-supreme",
+ "rstest",
+ "test-log",
+ "thiserror 2.0.3",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "arrayvec"
 version = "0.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"

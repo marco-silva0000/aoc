@@ -220,6 +220,54 @@ dependencies = [
 ]
 
 [[package]]
+name = "aoc23_20"
+version = "0.1.0"
+dependencies = [
+ "dhat",
+ "itertools 0.12.0",
+ "miette",
+ "nom",
+ "nom-supreme",
+ "rstest",
+ "test-log",
+ "thiserror",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "aoc23_21"
+version = "0.1.0"
+dependencies = [
+ "dhat",
+ "itertools 0.12.0",
+ "miette",
+ "nom",
+ "nom-supreme",
+ "rstest",
+ "test-log",
+ "thiserror",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "aoc23_22"
+version = "0.1.0"
+dependencies = [
+ "dhat",
+ "itertools 0.12.0",
+ "miette",
+ "nom",
+ "nom-supreme",
+ "rstest",
+ "test-log",
+ "thiserror",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "aoc23_3"
 version = "0.1.0"
 dependencies = [
