@@ -57,7 +57,7 @@ def test_part1():
 
 
 def test_part2():
-    data = """125 17"""
+    data = """0 7 6618216 26481 885 42 202642 8791"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part2(parsed_data)

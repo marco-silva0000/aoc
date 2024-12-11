@@ -24,6 +24,9 @@ bigint = 9223372036854775807
 def rule1(stone: int):
     return [1]
 
+@functools.cache
+def rule1_int(stone: int) -> int:
+    return 1
 
 @functools.cache
 def better_rule2(stone: int, n=int) -> List[int]:
@@ -44,12 +47,16 @@ def rule3(stone: int) -> List[int]:
 
 
 @functools.cache
-def transform_stone(stone: int) -> List[int]:
-    if stone == 0:
-        return rule1(stone)
+def transform_stone(stone: int, count: int) -> int:
+    if count == 0: # stop counting
+        return 1
+    elif stone == 0:
+        return transform_stone(1, count -1)
     elif (stone_n := len(str(stone))) % 2 == 0:
-        return better_rule2(stone, stone_n)
-    return rule3(stone)
+        half = stone_n // 2
+        return transform_stone(stone // 10**half, count-1) + transform_stone(stone % 10**half, count-1)
+
+    return transform_stone(stone * 2024, count - 1)
 
 
 def transform_old(stones: List[int]):
@@ -60,6 +67,8 @@ def transform_old(stones: List[int]):
     return new_stones
 
 
+
+@functools.cache
 def transform(stones: List[int]) -> List[int]:
     """Multithreaded and multiprocess approach"""
     with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -72,12 +81,14 @@ def transform(stones: List[int]) -> List[int]:
                 new_stones.extend(future.result())
     return new_stones
 
+@functools.cache
 def process_chunk(chunk: List[int]) -> List[int]:
     new_stones = []
     for stone in chunk:
         new_stones.extend(transform_stone(stone))
     return new_stones
 
+@functools.cache
 def transform_new(stones: List[int], chunk_splits: int = 10) -> List[int]:
 
     chunks = np.array_split(stones, chunk_splits)
@@ -90,6 +101,7 @@ def transform_new(stones: List[int], chunk_splits: int = 10) -> List[int]:
 
     return new_stones
 
+@functools.cache
 def transform_new2(stones: List[int], chunk_splits: int = 10) -> List[int]:
     chunk_size = max(1, len(stones) // chunk_splits)
     chunks = [stones[i:i + chunk_size] for i in range(0, len(stones), chunk_size)]
@@ -119,16 +131,16 @@ def part2(values_list) -> str:
     result = []
     n_blinks = 75
     for index, values in enumerate(values_list):
-        stones = list(map(int, values.split()))
+        stones_og = list(map(int, values.split()))
 
         structlog.contextvars.bind_contextvars(
             iteration=index,
         )
-    for iteration in range(n_blinks):
-        log.info(f"blinking {iteration}")
-        stones = transform_new2(stones)
-        if iteration < 5:
-            print(list(stones))
-    result = stones
-    print(len(result))
-    return f"{len(result)}"
+    result = 0
+    for stone in stones_og:
+        log.debug(f"stone: {stone}")
+        result += transform_stone(stone, n_blinks)
+    print(result)
+    return f"{result}"
+
+
