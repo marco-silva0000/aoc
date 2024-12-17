@@ -132,7 +132,7 @@ def part1(values_list) -> str:
                             operand = c
                         case _:
                             operand = combo_operand
-                    b = combo_operand % 8
+                    b = operand % 8
                 case Op.jnz:
                     if a != 0:
                         operand = ops[pointer]
