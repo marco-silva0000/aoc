@@ -8,7 +8,9 @@ from dataclasses import dataclass
 from itertools import cycle
 from enum import Enum, StrEnum
 import networkx as nx
-from itertools import product
+from itertools import product, islice, chain
+import matplotlib.pyplot as plt
+from collections import deque
 
 logger = structlog.get_logger()
 
@@ -267,6 +269,16 @@ def consturct_dir_keypad_graph():
     return dir_keypad_graph
 
 
+def sliding_window(iterable, n):
+    "Collect data into overlapping fixed-length chunks or blocks."
+    # sliding_window('ABCDEFG', 4) → ABCD BCDE CDEF DEFG
+    iterator = iter(iterable)
+    window = deque(islice(iterator, n - 1), maxlen=n)
+    for x in iterator:
+        window.append(x)
+        yield tuple(window)
+
+
 def part1(values_list) -> str:
     from structlog import get_logger
 
@@ -414,40 +426,211 @@ def part1(values_list) -> str:
             result.append("A")
         return result
 
-    results = []
+    def get_movements(this, that, pad="dir"):
+        match pad:
+            case "num":
+                path_dict = num_pad_paths
+                graph = num_keypad_graph
+            case "dir":
+                path_dict = dir_pad_paths
+                graph = dir_keypad_graph
+            case _:
+                raise ValueError(f"pad {pad} not supported")
+        # log.debug(
+        #     f"getting movements from {this} to {that}", path_dict__this=path_dict[this]
+        # )
+        possilbe_paths = path_dict[this][that]
+        return (this, that, possilbe_paths)
+
+    # get all paths untill now and yield them with the new path list as well
+    def generate_paths_from_current(current: List, paths: List):
+        log.debug("generate_paths_from_current", current=current, paths=paths)
+        if not current:
+            for path in paths:
+                yield path
+        for path in paths:
+            for c in current:
+                yield c + path
+
     n_robots = 2
+    results = []
+    for code in codes:
+        if not code.startswith("A"):
+            code = "A" + code
+        current = []
+        paths_list = []
+        for this, that in sliding_window(code, 2):
+            _, _, paths = get_movements(this, that, pad="num")
+            path_options = []
+            for path in paths:
+                path_directions = []
+                for this1, that1 in sliding_window(path, 2):
+                    log.debug(f"this1: {this1}, that1: {that1}")
+                    edge_data = num_keypad_graph.get_edge_data(this1, that1)
+                    log.debug(edge_data)
+                    path_directions.append(edge_data["direction"])
+                path_directions.append("A")
+                log.debug(f"path_directions: {path_directions}")
+                path_options.append(path_directions)
+
+            paths_list.append(path_options)
+
+        log.debug(f"paths_list", paths_list=paths_list)
+
+        combinations = product(*paths_list)
+        new_combinations = []
+        for combination in combinations:
+            log.debug(f"combination", combination=combination)
+            way_to_do_combination = []
+            ## if first position of combination is not A, then add A to the start
+            if combination[0][0] != "A":
+                combination[0].insert(0, "A")
+            for move in combination:
+                paths_list_to_do_move = []
+                log.debug(f"move", move=move)
+                for this, that in sliding_window(move, 2):
+                    _, _, paths = get_movements(this, that, pad="dir")
+                    log.debug(f"got paths from: {this} to that: {that}", paths=paths)
+                    path_options = []
+                    for path in paths:
+                        path_directions = []
+                        for this1, that1 in sliding_window(path, 2):
+                            log.debug(f"this1: {this1}, that1: {that1}", path=path)
+                            edge_data = dir_keypad_graph.get_edge_data(this1, that1)
+                            log.debug(edge_data)
+                            path_directions.append(edge_data["direction"])
+                        path_directions.append("A")
+                        log.debug(f"path_directions: {path_directions}")
+                        path_options.append(path_directions)
+                    paths_list_to_do_move.append(path_options)
+                way_to_do_combination.append(paths_list_to_do_move)
+            new_combinations.append(way_to_do_combination)
+
+        final_combinations = []
+        for combination in new_combinations:
+            combinations2 = product(*combination)
+
+            new_combinations2 = []
+            for combination in combinations2:
+                log.debug(f"combination2", combination=combination)
+                way_to_do_combination = []
+                ## if first position of combination is not A, then add A to the start
+                if combination[0][0] != "A":
+                    combination[0].insert(0, "A")
+                for move in combination:
+                    paths_list_to_do_move = []
+                    log.debug(f"move", move=move)
+                    for this, that in sliding_window(move, 2):
+                        _, _, paths = get_movements(this, that, pad="dir")
+                        log.debug(
+                            f"got paths from: {this} to that: {that}", paths=paths
+                        )
+                        path_options = []
+                        for path in paths:
+                            path_directions = []
+                            for this1, that1 in sliding_window(path, 2):
+                                log.debug(f"this1: {this1}, that1: {that1}", path=path)
+                                edge_data = dir_keypad_graph.get_edge_data(this1, that1)
+                                log.debug(edge_data)
+                                path_directions.append(edge_data["direction"])
+                            path_directions.append("A")
+                            log.debug(f"path_directions: {path_directions}")
+                            path_options.append(path_directions)
+                        paths_list_to_do_move.append(path_options)
+                    way_to_do_combination.append(paths_list_to_do_move)
+                new_combinations2.append(way_to_do_combination)
+            final_combinations.append(new_combinations2)
+
+        min_option = min(final_combinations, key=lambda x: len(x))
+
+        code_digits = int("".join(filter(lambda i: i.isdigit(), code)))
+        log.debug(
+            f"code: {code}",
+            code_digits=code_digits,
+            best_option_len=min_option,
+        )
+        code_score = code_digits * min_option
+        results.append(code_score)
+    return f"{sum(results)}"
+
+    results = []
     for code in codes:
         # get directions form num_keypad_graph
         # use directions in dir_keypad_graph
         # 3 times
+        num_solution_graph = nx.MultiDiGraph()
         if not code.startswith("A"):
             code = "A" + code
-        movements = get_directions(
-            code,
-            "num",
-        )
-        options = []
-        for move_options in movements:
-            path_options = []
-            for move_path in move_options:
-                path = ""
-                for move in move_path:
-                    path += move
-                path_options.append(path)
-            options.append(path_options)
-        log.debug(f"options", possibility=options)
-        # Generate all combinations
-        combinations = list(product(*options))
-        option_strings = ["".join(combination) for combination in combinations]
-        min_option = min(option_strings, key=lambda x: len(x))
-        log.debug(f"option_strings_len", option_strings=len(option_strings))
-        option_strings = list(
-            filter(lambda x: len(x) == len(min_option), option_strings)
-        )
-        log.debug(f"option_strings_len", option_strings=len(option_strings))
+        for this, that in sliding_window(code, 2):
+            if not num_solution_graph.has_edge(this, that):
+                this, that, possible_paths = get_movements(this, that, "num")
+                for path in possible_paths:
+                    num_solution_graph.add_edge(this, that, path=path, cost=len(path))
+                    logger.debug(f"add edge from {this} to {that}")
+        log.debug(f"graph", num_solution_graph=num_solution_graph)
+        log.debug(f"edges", edges=num_solution_graph.edges(keys=True, data=True))
+        log.debug(f"nbunch", nbunch=list(num_solution_graph.nbunch_iter(code)))
+
+        def generate_paths_from_pair(graph, this, that):
+            paths = nx.all_shortest_paths(graph, this, that)
+            for path in paths:
+                yield path
+
+        def arst(this, that, prev=""):
+            for path in generate_paths_from_pair(num_solution_graph, this, that):
+                for this_p, that_p in sliding_window(path, 2):
+                    if prev:
+                        yield from arst(
+                            that_p,
+                            that,
+                            prev + num_solution_graph[this_p][that_p]["path"],
+                        )
+                    else:
+                        yield from arst(
+                            that_p, that, num_solution_graph[this_p][that_p]["path"]
+                        )
+
+        def generate_stings_from_graph(graph, input_string):
+            for this, that in sliding_window(input_string, 2):
+                result = 0
+
+        # nx.draw(num_solution_graph, with_labels=True)
+        # plt.tight_layout()
+        # plt.show()
+        # plt.savefig("num_solution_graph.png")
+        # input()
+        # return 1
+        robot_graphs = []
+        for this, that in sliding_window(code, 2):
+            paths = nx.all_shortest_paths(num_solution_graph, this, that)
+            path_str = ""
+            log.debug(
+                f"getting best path from {this} to {that}",
+                this=this,
+                that=that,
+                # paths=list(paths),
+                edge_data=num_solution_graph.get_edge_data(this, that),
+            )
+            for path in paths:
+                log.debug(path)
+                for this_p, that_p in sliding_window(path, 2):
+                    log.debug(num_solution_graph[this_p][that_p])
+                    path_str += num_solution_graph[this_p][that_p]["path"]
+                    log.debug(
+                        "path_to_add",
+                        path_str=path_str,
+                        this_p=this_p,
+                        that_p=that_p,
+                        edge=num_solution_graph[this_p][that_p],
+                    )
+
+        return 1
 
         for index in range(n_robots):
-            options = []
+            for this, that in sliding_window:
+                pass
+            num_solution_graph.all_shortert_paths()
+            num_solution_graph = nx.MultiDiGraph()
             for jindex, option in enumerate(option_strings):
                 if not option.startswith("A"):
                     option = "A" + option
@@ -467,7 +650,7 @@ def part1(values_list) -> str:
                             path += move
                         path_options.append(path)
                     options.append(path_options)
-            log.debug(f"combining new options", options_len=len(options))
+            log.debug(f"options", possibility=options)
             combinations = list(product(*options))
             option_strings = ["".join(combination) for combination in combinations]
             log.debug(f"option_strings_len", option_strings=len(option_strings))
