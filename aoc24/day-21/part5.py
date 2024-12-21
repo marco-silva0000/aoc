@@ -5,7 +5,7 @@ import math
 import structlog
 from dataclasses import dataclass
 from itertools import cycle
-from itertools import product, islice, chain, tee
+from itertools import product, islice, chain
 import matplotlib.pyplot as plt
 from collections import deque, Counter
 import networkx as nx
@@ -309,54 +309,7 @@ def generate_paths_from_of_node_str(nodes: str, pad="dir"):
 
 
 @cache
-def generate_paths_from_to(f: str, t: str, pad="dir"):
-    match pad:
-        case "num":
-            path_dict = optimized_num_pad_paths
-            graph = optimized_num_keypad_graph
-        case "dir":
-            path_dict = optimized_dir_pad_paths
-            graph = optimized_dir_keypad_graph
-        case _:
-            raise ValueError(f"pad {pad} not supported")
-
-    paths = [v["path"] for v in graph.get_edge_data(f, t).values()]
-    return paths[0]["path"]
-
-
-@cache
-def generate_paths_from_node_list_optimized(nodes: Tuple[str], pad="dir"):
-    """
-    eg. nodes = ('A', '<', '^', '^^>', 'vvv', 'A')
-
-    """
-    match pad:
-        case "num":
-            path_dict = optimized_num_pad_paths
-            graph = optimized_num_keypad_graph
-        case "dir":
-            path_dict = optimized_dir_pad_paths
-            graph = optimized_dir_keypad_graph
-        case _:
-            raise ValueError(f"pad {pad} not supported")
-
-    all_options = []
-    logger.debug(f"generate_paths_from_node_list_optimized nodes: {nodes}")
-    for this, that in sliding_window(nodes, 2):
-        logger.debug(f"paths from {this} to {that}")
-
-        paths = path_dict[this][that]
-        paths = [v["path"] for v in graph.get_edge_data(this, that).values()]
-        # logger.debug(f"paths from this:{this} to that:{that}: {paths}")
-        # move_options = [path + "A" for path in paths]
-        # all_options.append(move_options)
-        all_options.append(paths)
-    # logger.debug(f"all_options: {all_options}")
-    yield from product(*all_options)
-
-
-@cache
-def generate_paths_from_of_node_str_optimized(nodes: Tuple[str], pad="dir"):
+def generate_paths_from_of_node_str_optimized(nodes: str, pad="dir"):
     """
     eg. nodes = "029A")
     yield all paths from 0 to 2, 2 to 9, 9 to A
@@ -378,16 +331,17 @@ def generate_paths_from_of_node_str_optimized(nodes: Tuple[str], pad="dir"):
             raise ValueError(f"pad {pad} not supported")
 
     all_options = []
-    logger.debug(f"generate_paths_from_of_node_str_optimized nodes: {nodes}")
     for this, that in sliding_window(nodes, 2):
-        logger.debug(f"paths from {this} to {that}")
+        # logger.debug(f"paths from {this} to {that}: [this]{path_dict[this]}")
 
         paths = path_dict[this][that]
         paths = [v["path"] for v in graph.get_edge_data(this, that).values()]
-        if pad != dir:
-            all_options.append(paths)
+        # logger.debug(f"paths from this:{this} to that:{that}: {paths}")
+        if pad == "num":
+            move_options = [path + "A" for path in paths]
         else:
-            all_options.append(paths[0])
+            move_options = [paths[0] + "A"]
+        all_options.append(move_options)
     # logger.debug(f"all_options: {all_options}")
     yield from product(*all_options)
     # for moves in product(*all_options):
@@ -424,7 +378,7 @@ def part2(values_list) -> str:
         )
 
     @cache
-    def do_robots(keypad_options, n_robot=8, concat_a=False):
+    def do_robots(keypad_options, n_robot=25):
         if n_robot == 0:
             min_str_len = math.inf
             min_str = ""
@@ -436,29 +390,23 @@ def part2(values_list) -> str:
             yield min_str
             return
 
-        logger.debug(f"{n_robot}_keypad_options: {keypad_options}")
+        logger.info(f"{n_robot}_keypad_options: {keypad_options}")
         for first_keypad_option in keypad_options:
-            logger.debug(f"{n_robot}_keypad_option: {first_keypad_option}")
-            if concat_a:
-                first_keypad_option += ("A",)
-            # first_keypad_option = "".join(first_keypad_option)
-            logger.debug(f"{n_robot}_keypad_option: {first_keypad_option}")
-            if not first_keypad_option[0].startswith("A"):
-                first_keypad_option = ("A",) + first_keypad_option
-            logger.debug(
-                f"{n_robot}_keypad_option after prepend: {first_keypad_option}"
-            )
+            first_keypad_option = "".join(first_keypad_option)
+            # logger.debug(f"{n_robot}_keypad_option: {first_keypad_option}")
+            if not first_keypad_option[0] == "A":
+                first_keypad_option = f"A{first_keypad_option}"
             paths_gen = generate_paths_from_of_node_str_optimized(
                 first_keypad_option, "dir"
             )
-            yield from do_robots(paths_gen, n_robot=n_robot - 1, concat_a=True)
+            yield from do_robots(paths_gen, n_robot=n_robot - 1)
 
             # for path in paths_gen:
             #     path = flatten(path)
             #     logger.debug(f"{n_robot}_generated_path: {path}")
             #     yield from do_robots(path, n_robot=n_robot - 1)
 
-    n_robots = 2
+    n_robots = 25
     results = []
     result_tuples = []
     for code in codes:
@@ -467,14 +415,9 @@ def part2(values_list) -> str:
         if not code.startswith("A"):
             code = f"A{code}"
         # log.debug(f"code: {code}")
-        d, first_keypad_options = tee(
-            generate_paths_from_of_node_str_optimized(code, "num")
-        )
-        log.debug(
-            "first_keypad_options",
-            first_keypad_options=list(d),
-        )
-        for option in do_robots(first_keypad_options, n_robot=n_robots, concat_a=True):
+        first_keypad_options = generate_paths_from_of_node_str_optimized(code, "num")
+        log.debug("first_keypad_options", first_keypad_options=first_keypad_options)
+        for option in do_robots(first_keypad_options, n_robot=n_robots):
             # log.debug("got option", option=option)
             if option and len(option) < min_str_len:
                 min_str_len = len(option)
