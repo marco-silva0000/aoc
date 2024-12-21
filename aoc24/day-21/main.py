@@ -67,9 +67,21 @@ def test_part1():
     assert result == "126384"
 
 
+# def test_sm_part2():
+#     data = """029A"""
+#     parsed_data = parse(data)
+#     log.debug(parsed_data)
+#     result = part2(parsed_data)
+#     assert result == "1972"
+
+
 def test_part2():
-    data = """"""
+    data = """029A
+980A
+179A
+456A
+379A"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part2(parsed_data)
-    assert result == ""
+    assert result == "126384"
