@@ -343,7 +343,13 @@ def generate_paths_from_of_node_str_optimized(nodes: str, pad="dir"):
             move_options = [paths[0] + "A"]
         all_options.append(move_options)
     # logger.debug(f"all_options: {all_options}")
-    yield from product(*all_options)
+    rs = []
+    for option in product(*all_options):
+        option = "".join(option)
+        logger.debug(f"option: {option}")
+        rs.append(option)
+    return rs
+
     # for moves in product(*all_options):
     # logger.debug(f"moves: {moves}")
     # yield list(chain(*moves))
@@ -355,7 +361,7 @@ def flatten(xss):
     return [x for xs in xss for x in xs]
 
 
-def part2(values_list, n_robots=25) -> str:
+def part2(values_list) -> str:
     from structlog import get_logger
 
     ctx = contextvars.copy_context()
@@ -377,60 +383,33 @@ def part2(values_list, n_robots=25) -> str:
             iteration=index,
         )
 
-    @cache
-    def do_robots(keypad_options, n_robot=25):
-        if n_robot == 0:
-            min_str_len = math.inf
-            min_str = ""
-            for option in keypad_options:
-                logger.debug("doing robot=0", option=option)
-                if len(option) < min_str_len:
-                    min_str_len = len(option)
-                    min_str = "".join(option)
-            yield min_str
-            return
-
-        logger.info(f"{n_robot}_keypad_options: {keypad_options}")
-        for first_keypad_option in keypad_options:
-            first_keypad_option = "".join(first_keypad_option)
-            # logger.debug(f"{n_robot}_keypad_option: {first_keypad_option}")
-            if not first_keypad_option[0] == "A":
-                first_keypad_option = f"A{first_keypad_option}"
-            paths_gen = generate_paths_from_of_node_str_optimized(
-                first_keypad_option, "dir"
-            )
-            yield from do_robots(paths_gen, n_robot=n_robot - 1)
-
-            # for path in paths_gen:
-            #     path = flatten(path)
-            #     logger.debug(f"{n_robot}_generated_path: {path}")
-            #     yield from do_robots(path, n_robot=n_robot - 1)
-
     # @cache
-    def do_robots2(keypad_options, n_robot=25):
+    def do_robots2(keypad_option, n_robot=25):
         if n_robot == 0:
-            min_str_len = math.inf
-            min_str = ""
-            for option in keypad_options:
-                logger.debug("doing robot=0", option=option)
-                if len(option) < min_str_len:
-                    min_str_len = len(option)
-                    min_str = "".join(option)
-            yield min_str
-            return
+            logger.debug("doing robot=0", keypad_option=keypad_option)
+            return len(keypad_option)
+            # min_str_len = math.inf
+            # min_str = ""
+            # for option in keypad_option:
+            #     logger.debug("doing robot=0", option=option)
+            #     if len(option) < min_str_len:
+            #         min_str_len = len(option)
+            #         min_str = "".join(option)
+            # yield min_str
+            # return
 
-        logger.info(f"{n_robot}_keypad_options: {keypad_options}")
-        for first_keypad_option in keypad_options:
-            first_keypad_option = "".join(first_keypad_option)
-            # logger.debug(f"{n_robot}_keypad_option: {first_keypad_option}")
-            if not first_keypad_option[0] == "A":
-                first_keypad_option = f"A{first_keypad_option}"
-            paths_gen = generate_paths_from_of_node_str_optimized(
-                first_keypad_option, "dir"
-            )
-            for paths in paths_gen:
-                yield from do_robots(paths, n_robot=n_robot - 1)
+        logger.info(f"{n_robot}_keypad_options: {keypad_option}")
+        if not keypad_option == "A":
+            keypad_option = "A" + keypad_option
+        paths_gen = generate_paths_from_of_node_str_optimized(keypad_option, "dir")
+        rs = []
+        for paths in paths_gen:
+            logger.debug(f"requesting on robot={n_robot}", paths=paths)
+            r = do_robots2(paths, n_robot=n_robot - 1)
+            rs.append(r)
+        return min(rs)
 
+    n_robots = 25
     results = []
     result_tuples = []
     for code in codes:
@@ -442,8 +421,10 @@ def part2(values_list, n_robots=25) -> str:
         first_keypad_options = generate_paths_from_of_node_str_optimized(code, "num")
         log.debug("first_keypad_options", first_keypad_options=first_keypad_options)
         for option in first_keypad_options:
-            rs = do_robots2(first_keypad_options, n_robot=n_robots)
-            for r in rs:
+            log.debug("option", option=option)
+            op = "".join(option)
+            ans = do_robots2(op, n_robot=n_robots)
+            for r in ans:
                 if r and len(r) < min_str_len:
                     min_str_len = len(r)
                     min_str = r
