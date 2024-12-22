@@ -189,6 +189,7 @@ def get_paths_from_str(nodes: str, pad="dir") -> List[str]:
     # if not nodes.startswith("A"):
     #     nodes = "A" + nodes
     nodes = nodes
+    nodes = "A" + nodes
     for this, that in sliding_window(nodes, 2):
         if this == that and False:
             pass
@@ -210,16 +211,20 @@ def get_paths_from_str(nodes: str, pad="dir") -> List[str]:
 def do_robots(
     keypad_option: str, n_robot=25, pad="dir", state="", keep_state=False
 ) -> int:
-    logger.debug(f"{n_robot}_keypad_options: {keypad_option}")
     # if not keypad_option.startswith("A"):
     #     keypad_option = "A" + keypad_option
+    logger.debug(f"{n_robot}_keypad_options: {keypad_option}")
     expansions = get_paths_from_str(keypad_option, pad=pad)
 
     if n_robot == 0:
         logger.debug("finished robot=0", keypad_option=keypad_option)
         if keep_state:
             logger.debug("finished robot=0, state", state=state)
-        return min([sum(map(len, expansion_list)) for expansion_list in expansions])
+        logger.debug("adding expansions on robot=0", expansions=expansions)
+        sorted_expansions = sorted(expansions, key=lambda x: sum(map(len, x)))
+        logger.debug("sorted_expansions", sorted_expansions=sorted_expansions)
+        best_expansion_len = min([sum(map(len, expansion_list)) for expansion_list in expansions])
+        return best_expansion_len
     logger.debug(
         f"got expansions on robot={n_robot}",
         expansions=expansions,
@@ -234,9 +239,9 @@ def do_robots(
                 # if not exp.startswith("A"):
                 #     exp = "A" + exp
                 if keep_state:
-                    state += "A" + exp
+                    state += exp
                 expansion_score += do_robots(
-                    "A" + exp,
+                    exp,
                     n_robot=n_robot - 1,
                     pad="dir",
                     state=state,
@@ -285,7 +290,8 @@ def part2(values_list, n_robots=25) -> str:
         # if not code.startswith("A"):
         #     code = f"A{code}"
         # log.debug(f"code: {code}")
-        ans = do_robots("A" + code, n_robot=n_robots, pad="num", keep_state=True)
+        # ans = do_robots("A" + code, n_robot=n_robots, pad="num", keep_state=True)
+        ans = do_robots(code, n_robot=n_robots, pad="num", keep_state=False)
 
         code_digits = int("".join(filter(lambda i: i.isdigit(), code)))
         # log.debug(

@@ -66,13 +66,36 @@ def test_part1():
     result = part1(parsed_data)
     assert result == "126384"
 
+# def test_sm_0_part2():
+#     # <A^A>^^AvvvA
+#     data = """029A"""
+#     parsed_data = parse(data)
+#     log.debug(parsed_data)
+#     result = part2(parsed_data, n_robots=0)
+#     assert result == "348"
 
-def test_sm_part2():
+def test_sm_1_part2():
+    # v<<A>>^A<A>AvA<^AA>A<vAAA>^A
     data = """029A"""
     parsed_data = parse(data)
     log.debug(parsed_data)
-    result = part2(parsed_data, n_robots=3)
+    result = part2(parsed_data, n_robots=1)
+    assert result == "812"
+
+def test_sm_2_part2():
+    # <vA<AA>>^AvAA<^A>A<v<A>>^AvA^A<vA>^A<v<A>^A>AAvA^A<v<A>A>^AAAvA<^A>A
+    data = """029A"""
+    parsed_data = parse(data)
+    log.debug(parsed_data)
+    result = part2(parsed_data, n_robots=2)
     assert result == "1972"
+
+# def test_sm_3_part2():
+#     data = """029A"""
+#     parsed_data = parse(data)
+#     log.debug(parsed_data)
+#     result = part2(parsed_data, n_robots=3)
+#     assert result == "1972"
 
 
 # def test_sm2_part2():
@@ -91,5 +114,5 @@ def test_part2():
 379A"""
     parsed_data = parse(data)
     log.debug(parsed_data)
-    result = part2(parsed_data, n_robots=3)
+    result = part2(parsed_data, n_robots=2)
     assert result == "126384"
