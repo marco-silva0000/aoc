@@ -186,19 +186,20 @@ def get_paths_from_str(nodes: str, pad="dir") -> List[str]:
             raise ValueError(f"pad {pad} not supported")
 
     all_options = []
-    if not nodes.startswith("A"):
-        nodes = "A" + nodes
-    # nodes = "A" + nodes
+    # if not nodes.startswith("A"):
+    #     nodes = "A" + nodes
+    nodes = nodes
     for this, that in sliding_window(nodes, 2):
-        if this == that:
-            all_options.append("A")
+        if this == that and False:
+            pass
+            # all_options.append("A")
         else:
             paths = path_dict[this][that]
             paths = [v["path"] for v in graph.get_edge_data(this, that).values()]
             logger.debug(f"paths from {this} to {that}: {paths}")
             move_options = []
             for path in paths:
-                move_options.append(path)
+                move_options.append(path + "A")
             all_options.append(move_options)
     result = list(product(*all_options))
     logger.debug(f"all_options_product: {result}")
@@ -206,15 +207,19 @@ def get_paths_from_str(nodes: str, pad="dir") -> List[str]:
 
 
 @cache
-def do_robots(keypad_option: str, n_robot=25, pad="dir") -> int:
-    if n_robot == 0:
-        logger.debug("finished robot=0", keypad_option=keypad_option)
-        return len(keypad_option)
-
+def do_robots(
+    keypad_option: str, n_robot=25, pad="dir", state="", keep_state=False
+) -> int:
     logger.debug(f"{n_robot}_keypad_options: {keypad_option}")
     # if not keypad_option.startswith("A"):
     #     keypad_option = "A" + keypad_option
     expansions = get_paths_from_str(keypad_option, pad=pad)
+
+    if n_robot == 0:
+        logger.debug("finished robot=0", keypad_option=keypad_option)
+        if keep_state:
+            logger.debug("finished robot=0, state", state=state)
+        return min([sum(map(len, expansion_list)) for expansion_list in expansions])
     logger.debug(
         f"got expansions on robot={n_robot}",
         expansions=expansions,
@@ -225,9 +230,28 @@ def do_robots(keypad_option: str, n_robot=25, pad="dir") -> int:
         expansion_score = 0
         logger.debug(f"requesting on robot={n_robot}", expansion=expansion)
         for jindex, exp in enumerate(expansion):
-            # if not exp.startswith("A"):
-            #     exp = "A" + exp
-            expansion_score += do_robots(exp, n_robot=n_robot - 1, pad="dir")
+            if jindex == 0:
+                # if not exp.startswith("A"):
+                #     exp = "A" + exp
+                if keep_state:
+                    state += "A" + exp
+                expansion_score += do_robots(
+                    "A" + exp,
+                    n_robot=n_robot - 1,
+                    pad="dir",
+                    state=state,
+                    keep_state=keep_state,
+                )
+            else:
+                if keep_state:
+                    state += exp
+                expansion_score += do_robots(
+                    exp,
+                    n_robot=n_robot - 1,
+                    pad="dir",
+                    state=state,
+                    keep_state=keep_state,
+                )
         robot_results.append(expansion_score)
     logger.debug(f"robot results on robot={n_robot}", robot_results=robot_results)
     return min(robot_results)
@@ -261,7 +285,7 @@ def part2(values_list, n_robots=25) -> str:
         # if not code.startswith("A"):
         #     code = f"A{code}"
         # log.debug(f"code: {code}")
-        ans = do_robots(code, n_robot=n_robots, pad="num")
+        ans = do_robots("A" + code, n_robot=n_robots, pad="num", keep_state=True)
 
         code_digits = int("".join(filter(lambda i: i.isdigit(), code)))
         # log.debug(
