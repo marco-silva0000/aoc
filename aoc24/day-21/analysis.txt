@@ -1,0 +1,19 @@
+<vA<AA>>^AvAA<^A>A<v<A>>^AvA^A<vA>^A<v<A>^A>AAvA^A<v<A>A>^AAAvA<^A>A
+v<<A>>^A<A>AvA<^AA>A<vAAA>^A
+<A^A>^^AvvvA
+029A
+
+solve(<A^A>^^AvvvA) == len(v<<A>>^A<A>AvA<^AA>A<vAAA>^A)
+solve(<A^A>^^AvvvA) == G1
+
+A0 02 29    9A
+<A ^A >^^A  vvvA
+
+G1 = solve(A<A, -1) + solve(^A, -1) + solve(>^^A, -1) + solve(vvvA, -1) == 8+2+6+5= 28
+
+solve(A<A, -1) ==  min(len(<v<A>>^A), len(<v<A>^>A), len(v<<A>>^A), len(v<<A>^>A)) == 8   v<<A>>^A
+solve(A^A, -1) == min(len(<A>A)) == 4 # CORRECT  <A>A
+solve(A>^^A, -1)  == min(len(vA<^AA>A), len(vA^<AA>A)) == 8 # CORRECT  vA<^AA>A  
+solve(AvvvA, -1) == min(len(<vAAA>^A), len(<vAAA^>A), len(v<AAA>^A), len(v<AAA^>A)) == 8 # CORRECT  <vAAA>^A
+
+A<A^A^^>AvvvAA<A^A^>^AvvvAA<A
