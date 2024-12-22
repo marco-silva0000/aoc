@@ -6,7 +6,6 @@ log = get_logger()
 
 from .part1 import part1
 from .part2 import part2
-from .part8 import part2
 
 
 def parse(data: str):
