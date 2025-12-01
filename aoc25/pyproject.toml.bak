@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "aoc25"
+version = "0.1.0"
+description = "Advent of code 25"
+authors = [{ name = "Marco Silva", email = "mail@marco-silva.com" }]
+requires-python = ">=3.12,<4"
+dependencies = [
+    "black>=22.10.0,<23",
+    "sympy>=1.11.1,<2",
+    "defaultlist>=1.0.0,<2",
+    "structlog>=23.2.0,<24",
+    "astar>=0.99,<0.100",
+    "pytest>=7.4.3,<8",
+    "numpy>=1.26.2,<2",
+    "cachetools>=5.3.2,<6",
+    "shapely>=2.0.2,<3",
+    "igraph>=0.11.3,<0.12",
+    "networkx>=3.2.1,<4",
+    "scipy>=1.11.4,<2",
+]
+
+[project.scripts]
+aoc = "aoc25:main"
+
+[dependency-groups]
+dev = []
+
