@@ -3,13 +3,44 @@ import contextvars
 import logging
 import math
 import structlog
-from dataclasses import dataclass
-from itertools import cycle
-from enum import Enum, StrEnum
-from itertools import product
-import numpy as np
+from collections import deque
 
 logger = structlog.get_logger()
+class Dial(deque):
+    def __init__(self, start, *args, **kwargs):
+        self.part1 = 0
+        self.part2 = 0
+        super().__init__(*args, **kwargs)
+        self.rotate(start)
+
+    def rotate_left(self, n: int):
+        self.rotate(n)
+
+    def rotate_right(self, n: int):
+        self.rotate(n*-1)
+
+    def rotate_n_left(self, n: int):
+        for _ in range(n):
+            self.rotate_left(1)
+            if self[0] == 0:
+                self.part2 += 1
+
+    def rotate_n_right(self, n: int):
+        for _ in range(n):
+            self.rotate_right(1)
+            if self[0] == 0:
+                self.part2 += 1
+
+    def spin(self, direction, number):
+        match direction:
+            case "R":
+                self.rotate_n_right(number)
+            case "L":
+                self.rotate_n_left(number)
+            case _:
+                raise ValueError("Unsuported move")
+        if self[0] == 0:
+            self.part1 += 1
 
 
 def part1(values_list) -> str:
@@ -26,48 +57,17 @@ def part1(values_list) -> str:
 
     log = get_logger()
     log.info("day 25 part1")
-    result = []
-    maps = [[]]
 
-    for index, values in enumerate(values_list):
-        if values == "":
-            maps.append([])
-            continue
-        maps[-1].append([1 if value == "#" else 0 for value in values])
+    dial = Dial(50, range(0,100))
 
+    for index, line in enumerate(values_list):
         structlog.contextvars.bind_contextvars(
             iteration=index,
         )
-    # keys have first row all ones
-    keys = []
-    locks = []
+        letter = line[0]
+        number = int(line[1:])
+        dial.spin(letter, number)
 
-    for map in maps:
-        log.debug(map)
-        log.debug(map[0])
-        log.debug(map[-1])
-        log.debug(map[0] == 1)
-        if all([m == 1 for m in map[0]]):
-            log.debug("all are one, is key")
-            keys.append(np.array(map))
-        elif all([m == 1 for m in map[-1]]):
-            log.debug("all are one, is lock")
-            locks.append(np.array(map))
 
-    result = 0
-    for key, lock in product(keys, locks):
-        # log.debug("trying", key=key, lock=lock)
-        log.debug(key + lock)
-        skip = False
-        for row in key + lock:
-            for cell in row:
-                log.debug(cell)
-                if cell >= 2:
-                    skip = True
-                    break
-        if not skip:
-            log.debug("found", key=key, lock=lock)
-            result += 1
-
-    print(result)
-    return f"{result}"
+    print(dial.part1)
+    return f"{dial.part1}"

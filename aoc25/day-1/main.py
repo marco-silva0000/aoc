@@ -41,45 +41,16 @@ def run_part2(parsed_data):
 
 
 def test_part1():
-    data = """#####
-.####
-.####
-.####
-.#.#.
-.#...
-.....
-
-#####
-##.##
-.#.##
-...##
-...#.
-...#.
-.....
-
-.....
-#....
-#....
-#...#
-#.#.#
-#.###
-#####
-
-.....
-.....
-#.#..
-###..
-###.#
-###.#
-#####
-
-.....
-.....
-.....
-#....
-#.#..
-#.#.#
-#####"""
+    data = """L68
+L30
+R48
+L5
+R60
+L55
+L1
+L99
+R14
+L82"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part1(parsed_data)
@@ -87,8 +58,17 @@ def test_part1():
 
 
 def test_part2():
-    data = """"""
+    data = """L68
+L30
+R48
+L5
+R60
+L55
+L1
+L99
+R14
+L82"""
     parsed_data = parse(data)
     log.debug(parsed_data)
     result = part2(parsed_data)
-    assert result == ""
+    assert result == "6"
