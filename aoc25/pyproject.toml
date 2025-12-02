@@ -11,6 +11,7 @@ dependencies = [
     "cachetools>=6.2.2",
     "defaultlist>=1.2.0",
     "igraph>=1.0.0",
+    "more-itertools>=10.8.0",
     "networkx>=3.6",
     "numpy>=2.3.5",
     "pytest>=9.0.1",
