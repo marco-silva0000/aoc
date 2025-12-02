@@ -1,4 +1,4 @@
-use aoc24_{{day}}::part2::process;
+use aoc25_{{day}}::part2::process;
 use miette::Context;
 
 fn main() -> miette::Result<()> {
