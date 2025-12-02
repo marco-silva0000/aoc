@@ -16,4 +16,4 @@ target/
 .env
 
 !daily-template/input**.txt
-**input.txt
+**input*.txt
