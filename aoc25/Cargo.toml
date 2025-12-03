@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "aoc25_2",
+    "aoc25_3",
     "day-*",
 ]
 default-members = ["day-*"]
