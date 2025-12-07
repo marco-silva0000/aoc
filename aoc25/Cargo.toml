@@ -5,6 +5,7 @@ members = [
     "aoc25_4",
     "aoc25_5",
     "aoc25_6",
+    "aoc25_7",
     "day-*",
 ]
 default-members = ["day-*"]
