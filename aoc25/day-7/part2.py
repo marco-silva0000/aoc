@@ -257,11 +257,14 @@ class Tile:
         if not in_bounds(south, min_x, min_y, max_x, max_y):
             return []
         south_node = grid[south]
-        result.append(south_node.location)
         match south_node.tile_type:
             case TileType.EMPTY:
+                result.append(south_node.location)
                 south_node.tile_type = TileType.RAY
                 south_node.ray_power = self.ray_power
+            case TileType.RAY:
+                result.append(south_node.location)
+                south_node.ray_power += self.ray_power
             case TileType.SPLITTER:
                 south_node.has_split = True
                 west = south_node.location.west_neighbour()
@@ -271,9 +274,9 @@ class Tile:
                     match west_node.tile_type:
                         case TileType.EMPTY:
                             west_node.tile_type = TileType.RAY
-                            west_node.ray_power = self.ray_power + 1
+                            west_node.ray_power = self.ray_power
                         case TileType.RAY:
-                            west_node.ray_power += 1
+                            west_node.ray_power += self.ray_power
                 east = south_node.location.east_neighbour()
                 east_node = grid[east]
                 if in_bounds(east, min_x, min_y, max_x, max_y):
@@ -281,9 +284,9 @@ class Tile:
                     match east_node.tile_type:
                         case TileType.EMPTY:
                             east_node.tile_type = TileType.RAY
-                            east_node.ray_power = self.ray_power + 1
+                            east_node.ray_power = self.ray_power
                         case TileType.RAY:
-                            east_node.ray_power += 1
+                            east_node.ray_power += self.ray_power
         return result
 
 
@@ -362,7 +365,10 @@ def print_grid(
                         else:
                             print(".", end="")
                     else:
-                        print(frequency, end="")
+                        if frequency == TileType.RAY:
+                            print(grid[point].ray_power, end="")
+                        else:
+                            print(frequency, end="")
                 except KeyError:
                     print(".", end="")
                     continue
@@ -427,15 +433,18 @@ def part2(values_list) -> str:
     min_y = 0
     print_grid(grid, max_x=max_x, max_y=max_y, origin=start)
     active_rays = []
-    first_ray_pos = grid[start].location.south_neighbour()
+    first_ray_pos = grid[start].location
     grid[first_ray_pos].tile_type = TileType.RAY
     grid[first_ray_pos].ray_power = 1
-    heapq.heappush(active_rays, first_ray_pos)
-    while active_rays:
-        ray_node = heapq.heappop(active_rays)
-        new_rays = grid[ray_node].propagate(grid, min_x, min_y, max_x, max_y)
+    node_levels = defaultdict(set)
+    node_levels[0].add(first_ray_pos)
+    for y in range(max_y):
+        # print_grid(grid, max_x=max_x, max_y=max_y, origin=start)
+        new_rays = []
+        for node_ray in node_levels[y]:
+            new_rays.extend(grid[node_ray].propagate(grid, min_x, min_y, max_x, max_y))
         for new_ray in new_rays:
-            heapq.heappush(active_rays, new_ray)
+            node_levels[y + 1].add(new_ray)
 
     result = sum(
         map(
