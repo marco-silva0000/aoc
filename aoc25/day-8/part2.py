@@ -14,9 +14,68 @@ from scipy.spatial import cKDTree
 from scipy.spatial.distance import pdist
 import numpy as np
 import pandas as pd
+import plotly.graph_objects as go
 
 
 logger = structlog.get_logger()
+
+
+# ai genned visualize_mst_plotly
+def visualize_mst_plotly(df, G_full):
+    mst_edges = list(nx.minimum_spanning_edges(G_full, algorithm="kruskal", data=False))
+
+    # 1. Create Nodes Trace
+    node_x, node_y, node_z = [], [], []
+    text_labels = []
+
+    for idx, row in df.iterrows():
+        p = row.geometry
+        node_x.append(p.x)
+        node_y.append(p.y)
+        node_z.append(p.z)
+        text_labels.append(f"ID: {row.ID}")
+
+    node_trace = go.Scatter3d(
+        x=node_x,
+        y=node_y,
+        z=node_z,
+        mode="markers",
+        marker=dict(size=4, color="blue"),
+        text=text_labels,
+        name="Junction Boxes",
+    )
+
+    # 2. Create Edges Trace
+    # Plotly draws lines by connecting points in a sequence.
+    # To draw separate lines, we insert 'None' between pairs.
+    edge_x, edge_y, edge_z = [], [], []
+
+    for u, v in mst_edges:
+        p1 = df.loc[df.ID == u, "geometry"].iloc[0]
+        p2 = df.loc[df.ID == v, "geometry"].iloc[0]
+
+        edge_x.extend([p1.x, p2.x, None])
+        edge_y.extend([p1.y, p2.y, None])
+        edge_z.extend([p1.z, p2.z, None])
+
+    edge_trace = go.Scatter3d(
+        x=edge_x,
+        y=edge_y,
+        z=edge_z,
+        mode="lines",
+        line=dict(color="red", width=2),
+        opacity=0.5,
+        name="Connections",
+    )
+
+    # 3. Render
+    fig = go.Figure(data=[node_trace, edge_trace])
+    fig.update_layout(
+        title="3D Network Connections",
+        scene=dict(xaxis_title="X", yaxis_title="Y", zaxis_title="Z"),
+        margin=dict(l=0, r=0, b=0, t=40),
+    )
+    fig.show()
 
 
 def part2(values_list, n=999) -> str:
@@ -73,6 +132,6 @@ def part2(values_list, n=999) -> str:
     print(f"Coords: {geom_u} <-> {geom_v}")
 
     result = int(geom_u.x * geom_v.x)
-
+    visualize_mst_plotly(df, G)
     print(result)
     return f"{result}"
