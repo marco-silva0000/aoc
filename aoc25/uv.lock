@@ -13,6 +13,7 @@ dependencies = [
     { name = "defaultlist" },
     { name = "geopandas" },
     { name = "igraph" },
+    { name = "ilpy" },
     { name = "libpysal" },
     { name = "more-itertools" },
     { name = "networkx" },
@@ -33,6 +34,7 @@ requires-dist = [
     { name = "defaultlist", specifier = ">=1.2.0" },
     { name = "geopandas", specifier = ">=1.1.1" },
     { name = "igraph", specifier = ">=1.0.0" },
+    { name = "ilpy", specifier = ">=0.5.2" },
     { name = "libpysal", specifier = ">=4.13.0" },
     { name = "more-itertools", specifier = ">=10.8.0" },
     { name = "networkx", specifier = ">=3.6" },
@@ -207,6 +209,18 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/7b/5d/8f7f6f619d374e959aa3664ebc4b24c10abc90c2e8efbed97f2623fadaf5/igraph-1.0.0-cp39-abi3-win32.whl", hash = "sha256:c2bce3cd472fec3dd9c4d8a3ea5b6b9be65fb30edf760beb4850760dd4f2d479", size = 2725406, upload-time = "2025-10-23T12:22:37.588Z" },
     { url = "https://files.pythonhosted.org/packages/af/77/a85b3745cf40a0572bae2de8cd9c2a2a8af78e5cf3e880fc0a249114e609/igraph-1.0.0-cp39-abi3-win_amd64.whl", hash = "sha256:faeff8ede0cf15eb4ded44b0fcea6e1886740146e60504c24ad2da14e0939563", size = 3221663, upload-time = "2025-10-23T12:22:39.404Z" },
     { url = "https://files.pythonhosted.org/packages/ef/7e/5df541c37bdf6493035e89c22bd53f30d99b291bcda6c78e9a8afeecec2b/igraph-1.0.0-cp39-abi3-win_arm64.whl", hash = "sha256:b607cafc24b10a615e713ee96e58208ef27e0764af80140c7cc45d4724a3f2df", size = 2785701, upload-time = "2025-10-23T12:22:41.03Z" },
+]
+
+[[package]]
+name = "ilpy"
+version = "0.5.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pyscipopt" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/60/0c/95ba0bdf445cc216e1d3931417ec690cf88e70444a49f2a3b8553db73c0b/ilpy-0.5.2.tar.gz", hash = "sha256:875883d1f83d9508ccd6357d96cd879f345dc3288af0f0d58272771667a57c58", size = 26449, upload-time = "2025-10-17T21:56:25.089Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c5/db/1d3d0e134e9b8a8fc4ba5081ce814d9b7d375e327d88b1ec8f9ca7097d45/ilpy-0.5.2-py3-none-any.whl", hash = "sha256:151c5808e61cc51dda056df836494d33bd79c4ca064a767ce847781c67437f92", size = 22686, upload-time = "2025-10-17T21:56:24.115Z" },
 ]
 
 [[package]]
@@ -460,6 +474,25 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/e8/8b/a3f0618b03957de9db5489a04558a8826f43906628bb0b766033aa3b5548/pyproj-3.7.2-cp314-cp314t-win32.whl", hash = "sha256:c9b6f1d8ad3e80a0ee0903a778b6ece7dca1d1d40f6d114ae01bc8ddbad971aa", size = 6056848, upload-time = "2025-08-14T12:05:37.553Z" },
     { url = "https://files.pythonhosted.org/packages/bc/56/413240dd5149dd3291eda55aa55a659da4431244a2fd1319d0ae89407cfb/pyproj-3.7.2-cp314-cp314t-win_amd64.whl", hash = "sha256:1914e29e27933ba6f9822663ee0600f169014a2859f851c054c88cf5ea8a333c", size = 6517676, upload-time = "2025-08-14T12:05:39.126Z" },
     { url = "https://files.pythonhosted.org/packages/15/73/a7141a1a0559bf1a7aa42a11c879ceb19f02f5c6c371c6d57fd86cefd4d1/pyproj-3.7.2-cp314-cp314t-win_arm64.whl", hash = "sha256:d9d25bae416a24397e0d85739f84d323b55f6511e45a522dd7d7eae70d10c7e4", size = 6391844, upload-time = "2025-08-14T12:05:40.745Z" },
+]
+
+[[package]]
+name = "pyscipopt"
+version = "6.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/c9/65/a34970ed5d1e7f9f547963ede9f802d97cdec36baa0d7a4ed5d8c2a646ff/pyscipopt-6.0.0.tar.gz", hash = "sha256:93cfb230b60a69046fc175e9760546665004be8a8ed1507769df243af838426b", size = 1503538, upload-time = "2025-11-28T17:21:06.195Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/93/eb/70ab63103d7227f3ddca48b4838b0de2961792bbd67d6a0528464b3d3b28/pyscipopt-6.0.0-cp314-cp314-macosx_14_0_arm64.whl", hash = "sha256:a9f80ad5aafe22adbc953bcc12f075a3a11a5ae01b150ec84f4b977ae2048ae5", size = 8340725, upload-time = "2025-11-28T17:20:24.095Z" },
+    { url = "https://files.pythonhosted.org/packages/81/c1/dabe2e2c492ab41571da808231be969f4bf5317eb58d76ebce13ebc2d7a7/pyscipopt-6.0.0-cp314-cp314-macosx_14_0_x86_64.whl", hash = "sha256:58e9f3d288b478ae916e9051d549f513e60b84b7cc9e617f1ed0f0cf98fef517", size = 12177245, upload-time = "2025-11-28T17:20:25.827Z" },
+    { url = "https://files.pythonhosted.org/packages/3c/cc/eea58001afce01fb81b5208356038178fbc5f28b6f7ef142f5f1ab623df9/pyscipopt-6.0.0-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:182ac8ae048591ae52bd832ab97451a879e4363dbd18e0994b41bc9fa1bdbd91", size = 16952860, upload-time = "2025-11-28T17:20:28.325Z" },
+    { url = "https://files.pythonhosted.org/packages/04/dc/06f5cbb447b87965c569ad18298ba937be12b411b0547ad338b6014033e1/pyscipopt-6.0.0-cp314-cp314-win_amd64.whl", hash = "sha256:676d011155dd5f957541ce4f1c645aad6e543c85b229ba83d7c9f78542889a72", size = 49298382, upload-time = "2025-11-28T17:20:31.757Z" },
+    { url = "https://files.pythonhosted.org/packages/5e/1f/fdefaef975cf085a0284a0a46d924a0511f083897d90c74fc1ba851d2996/pyscipopt-6.0.0-cp314-cp314t-macosx_14_0_arm64.whl", hash = "sha256:95bd95f87a9ad60e8ff5cbb199ccf355d9efbf9e611962f56e99032c0e8f74d0", size = 8449039, upload-time = "2025-11-28T17:20:34.694Z" },
+    { url = "https://files.pythonhosted.org/packages/b3/da/4550860c82fe3849cfd472c2830f52f7be4ce665874d8b3e57def6af789c/pyscipopt-6.0.0-cp314-cp314t-macosx_14_0_x86_64.whl", hash = "sha256:3580256b25bd0d5cfc0f5c0a546da9206978944ea6109e4e810381871e622a06", size = 12253051, upload-time = "2025-11-28T17:20:37.751Z" },
+    { url = "https://files.pythonhosted.org/packages/f2/ea/f331dc735fadde2f50010bafade3b45ab753c823a00440a54a57f5f6c4a7/pyscipopt-6.0.0-cp314-cp314t-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:fe890a32fb9cc473226df0ad7f218609fe9dcd78ab67a5dd619407c20878376e", size = 17300218, upload-time = "2025-11-28T17:20:40.076Z" },
+    { url = "https://files.pythonhosted.org/packages/2e/65/24f0c37e987803fed8bce7f494d38d2834c261f9d977560ec2a8b433a4eb/pyscipopt-6.0.0-cp314-cp314t-win_amd64.whl", hash = "sha256:b60b5a1de9670c95a95eb823270e618d67d06c474aa96d27633a8cee29d6638c", size = 49480108, upload-time = "2025-11-28T17:20:42.972Z" },
 ]
 
 [[package]]

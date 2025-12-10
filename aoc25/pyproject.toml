@@ -12,6 +12,7 @@ dependencies = [
     "defaultlist>=1.2.0",
     "geopandas>=1.1.1",
     "igraph>=1.0.0",
+    "ilpy>=0.5.2",
     "libpysal>=4.13.0",
     "more-itertools>=10.8.0",
     "networkx>=3.6",

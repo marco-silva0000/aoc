@@ -10,6 +10,7 @@ from collections import deque
 import numpy as np
 import networkx as nx
 import concurrent.futures
+import ilpy
 
 logger = structlog.get_logger()
 
@@ -33,122 +34,60 @@ def action_func(action: tuple, state: str) -> str:
     return "".join(next_state)
 
 
-def action_func_joltage(action: tuple, state: tuple[int]) -> tuple[int]:
-    next_state = list(state)
-    logger.debug("action_func start", action=action, state=state, next_state=next_state)
-    for operation_index in action:
-        next_state[operation_index] += 1
-    next_state = tuple(next_state)
-    logger.debug("action_func", action=action, state=state, next_state=next_state)
-    return next_state
-
-
-def is_valid_joltage_state(next_state: tuple[int], joltage: tuple[int]) -> tuple[int]:
-    logger.debug("is_valid_joltage_state", next_state=next_state, joltage=joltage)
-    diff = np.subtract(joltage, next_state)
-    return (diff >= 0).all()
-
-
-class State(list):
-    def __hash__(self):
-        return hash("".join(self))
-
-
 @dataclass()
 class Machine:
-    state: State
-    actions: list(tuple)
+    state: list
+    actions: list[tuple]
+    action_matrix: list[list[int]]
     joltage: tuple[int]
     graph: any = None
 
-    def generate_graph(self):
-        initial_state = "".join([StateType.OFF] * len(self.state))
-        goal_state = "".join(self.state)
-        logger.debug(
-            "generate_graph",
-            goal=self.state,
-            actions=self.actions,
-            initial_state=initial_state,
-        )
-        G = nx.DiGraph()
-        G.add_node(initial_state)
+    def ilp_solve(self):
+        num_buttons = len(self.actions)
+        solver = ilpy.LinearSolver(num_buttons, ilpy.VariableType.Integer)
+        objective = ilpy.LinearObjective()
+        for i in range(num_buttons):
+            objective.set_coefficient(i, 1.0)
+        solver.set_objective(objective)
+        for index_joltage, target_joltage in enumerate(self.joltage):
+            constraint = ilpy.LinearConstraint()
+            for action_index, action in enumerate(self.actions):
+                if index_joltage in action:
+                    constraint.set_coefficient(action_index, 1.0)
 
-        queue = deque([initial_state])
-        visited = set([initial_state])
+            constraint.set_relation(ilpy.Relation.Equal)
+            constraint.set_value(target_joltage)
+            solver.add_constraint(constraint)
 
-        logger.info(f"Starting Search: {initial_state} -> {goal_state}")
-        found = False
-        while queue:
-            current = queue.popleft()
-            if current == goal_state:
-                found = True
-                self.graph = G
-                return self.graph
-
-            for action in self.actions:
-                next_state = action_func(action, current)
-
-                if next_state is not None and next_state not in visited:
-                    visited.add(next_state)
-                    queue.append(next_state)
-                    G.add_edge(current, next_state, action=action)
-        raise "couldnt find path"
-
-    def generate_joltage_graph(self):
-        initial_state = tuple([0] * len(self.joltage))
-        goal_state = self.joltage
-        logger.debug(
-            "generate_joltage_graph",
-            goal=self.state,
-            actions=self.actions,
-            initial_state=initial_state,
-        )
-        G = nx.DiGraph()
-        G.add_node(initial_state)
-
-        queue = deque([initial_state])
-        visited = set([initial_state])
-
-        logger.info(f"Starting Search: {initial_state} -> {goal_state}")
-        found = False
-        while queue:
-            current = queue.popleft()
-            if current == goal_state:
-                found = True
-                self.graph = G
-                return self.graph
-
-            for action in self.actions:
-                next_state = action_func_joltage(action, current)
-
-                if (
-                    next_state is not None
-                    and next_state not in visited
-                    and is_valid_joltage_state(next_state, self.joltage)
-                ):
-                    visited.add(next_state)
-                    queue.append(next_state)
-                    G.add_edge(current, next_state, action=action)
-        raise "couldnt find path"
-
-    def shortest_path(self):
-        initial_state = "".join([StateType.OFF] * len(self.state))
-        goal = "".join(self.state)
-        path = nx.shortest_path(self.graph, source=initial_state, target=goal)[1:]
-        logger.debug("shortest_path", goal=goal, initial_state=initial_state, path=path)
-        return path
-
-    def shortest_joltage_path(self):
-        initial_state = tuple([0] * len(self.joltage))
-        goal = self.joltage
-        path = nx.shortest_path(self.graph, source=initial_state, target=goal)[1:]
-        logger.debug("shortest_path", goal=goal, initial_state=initial_state, path=path)
-        return path
+        # non negative button presses
+        for i in range(num_buttons):
+            nn_constraint = ilpy.LinearConstraint()
+            nn_constraint.set_coefficient(i, 1.0)
+            nn_constraint.set_relation(ilpy.Relation.GreaterEqual)
+            nn_constraint.set_value(0)
+            solver.add_constraint(nn_constraint)
+        solution = solver.solve()
+        value = int(solution.objective_value)
+        logger.info("found solution", solution=solution, value=value)
+        return int(round(value))
 
 
 def process_machine(machine):
-    machine.generate_joltage_graph()
-    return machine.shortest_joltage_path()
+    shortest_joltage_path = machine.ilp_solve()
+    logger.info(
+        f"found shortest_joltage_path for {machine.joltage} with length {shortest_joltage_path}"
+    )
+    return shortest_joltage_path
+
+
+def make_action_matrix(actions, joltage):
+    result = []
+    for action in actions:
+        action_arr = [0] * len(joltage)
+        for action_index in action:
+            action_arr[action_index] += 1
+        result.append(action_arr)
+    return result
 
 
 def part2(values_list) -> str:
@@ -175,15 +114,18 @@ def part2(values_list) -> str:
         actions = [eval(button.replace(")", ",)")) for button in buttons]
         actions.sort(key=len, reverse=True)
         joltage = tuple(map(int, joltage[1:-1].split(",")))
-        machine = Machine(state_goal, actions, joltage)
+        action_matrix = make_action_matrix(actions, joltage)
+        machine = Machine(state_goal, actions, action_matrix, joltage)
         logger.info("machine", machine=machine)
         machines.append(machine)
 
     result = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+
+    # result = list(map(process_machine, machines))
+    with concurrent.futures.ProcessPoolExecutor() as executor:
         result = list(executor.map(process_machine, machines))
 
     print(result)
-    result = sum(map(len, result))
+    result = sum(result)
     print(result)
     return f"{result}"
