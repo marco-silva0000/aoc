@@ -64,13 +64,28 @@ def part2(values_list) -> str:
     n_svr_dac = count_paths_dag(start, stop_1)
     n_dac_fft = count_paths_dag(stop_1, stop_2)
     n_fft_out = count_paths_dag(stop_2, end)
+    path_a_total = n_svr_dac * n_dac_fft * n_fft_out
+    logger.info(
+        "path_a_total",
+        path_a_total=path_a_total,
+        n_svr_dac=n_svr_dac,
+        n_dac_fft=n_dac_fft,
+        n_fft_out=n_fft_out,
+    )
 
     n_svr_fft = count_paths_dag(start, stop_2)
     n_fft_dac = count_paths_dag(stop_2, stop_1)
     n_dac_out = count_paths_dag(stop_1, end)
-
-    path_a_total = n_svr_dac * n_dac_fft * n_fft_out
     path_b_total = n_svr_fft * n_fft_dac * n_dac_out
+    logger.info(
+        "path_b_total",
+        path_b_total=path_b_total,
+        n_svr_fft=n_svr_fft,
+        n_fft_dac=n_fft_dac,
+        n_dac_out=n_dac_out,
+    )
+
+    logger.info("path_totals", path_a_total=path_a_total, path_b_total=path_b_total)
     result = path_a_total + path_b_total
 
     print(result)
