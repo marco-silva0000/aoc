@@ -1,17 +1,17 @@
-#!/usr/bin/env cargo +nightly -Zscript
+#!/usr/bin/env -S cargo +nightly -Zscript
 ---cargo
 [package]
-edition = "2021"
+edition = "2024"
 [dependencies]
-clap = { version = "4.2", features = ["derive"] }
-nom = "7.1.3"
-reqwest = { version = "0.11.22", features=["blocking"] }
+clap = { version = "4.5", features = ["derive"] }
+nom = "8"
+reqwest = { version = "0.12", features=["blocking"] }
 ---
 
 use clap::{error::ErrorKind, CommandFactory, Parser};
 use nom::{
     bytes::complete::tag, character::complete,
-    sequence::preceded, IResult,
+    sequence::preceded, IResult, Parser as NomParser,
 };
 use reqwest::{blocking::Client, header::COOKIE};
 use std::fs::File;
@@ -34,7 +34,7 @@ struct Args {
 }
 
 fn parse_day(input: &str) -> IResult<&str, u32> {
-    preceded(tag("day-"), complete::u32)(input)
+    preceded(tag("day-"), complete::u32).parse(input)
 }
 
 fn main() -> Result<(), reqwest::Error> {
@@ -54,7 +54,7 @@ fn main() -> Result<(), reqwest::Error> {
     };
 
     let url = format!(
-        "https://adventofcode.com/2024/day/{day}/input"
+        "https://adventofcode.com/2025/day/{day}/input"
     );
     println!("sending to `{}`", url);
 

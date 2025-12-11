@@ -19,7 +19,7 @@ def parse(data: str):
 
 def get_data():
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    f = open(f"{current_dir}/input1.txt")
+    f = open(f"{current_dir}/input.txt")
     data = f.read()
     f.close()
     return data
@@ -38,6 +38,7 @@ def run_part1(parsed_data):
 
 def run_part2(parsed_data):
     print(part2(parsed_data))
+
 
 
 def test_part1():
