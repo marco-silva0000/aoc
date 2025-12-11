@@ -14,6 +14,7 @@ dependencies = [
     "igraph>=1.0.0",
     "ilpy>=0.5.2",
     "libpysal>=4.13.0",
+    "matplotlib>=3.10.8",
     "more-itertools>=10.8.0",
     "networkx>=3.6",
     "numpy>=2.3.5",
