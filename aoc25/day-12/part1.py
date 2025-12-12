@@ -9,8 +9,78 @@ from enum import Enum, StrEnum
 
 logger = structlog.get_logger()
 
+part1_test_pieces = {
+    0: """###
+##.
+##.
+""",
+    1: """###
+##.
+.##""",
+    2: """.##
+###
+##.""",
+    3: """##.
+###
+##.""",
+    4: """###
+#..
+###""",
+    5: """###
+.#.
+###""",
+}
 
-def part1(values_list) -> str:
+part1_pieces = {
+    0: """#.#
+###
+##.""",
+    1: """#.#
+###
+#.#""",
+    2: """###
+..#
+###""",
+    3: """.##
+##.
+#..""",
+    4: """##.
+##.
+###""",
+    5: """..#
+.##
+###""",
+}
+
+
+class TileType(StrEnum):
+    EMPTY = "."
+    GIFT = "#"
+
+
+@dataclass()
+class Region:
+    width: int
+    length: int
+    n_gifts: list[int]
+
+
+def calc_area(piece):
+    return piece.count("#")
+
+
+def will_it_fit(region: Region, pieces: dict) -> bool:
+    total_area = region.width * region.length
+    pieces_area = 0
+    for index, quantity in enumerate(region.n_gifts):
+        piece_area = quantity * calc_area(pieces[index])
+        logger.debug("calculating", piece=index, piece_area=piece_area)
+        pieces_area += piece_area
+    logger.debug("will_it_fit", pieces_area=pieces_area, total_area=total_area)
+    return pieces_area * 1.2 <= total_area
+
+
+def part1(values_list, test=False) -> str:
     from structlog import get_logger
 
     ctx = contextvars.copy_context()
@@ -24,11 +94,30 @@ def part1(values_list) -> str:
 
     log = get_logger()
     log.info("day 12 part1")
+    if test:
+        pieces = part1_test_pieces
+    else:
+        pieces = part1_pieces
     result = []
-    for index, values in enumerate(values_list):
-        pass
+    iterator = enumerate(values_list)
+    regions = []
+    for _ in range(30):
+        next(iterator)
+    for index, values in iterator:
         structlog.contextvars.bind_contextvars(
             iteration=index,
         )
-    print(len(result))
-    return f"{len(result)}"
+        region_hw, region_indexes = values.split(":")
+        width, length = map(int, region_hw.split("x"))
+        n_gifts = list(map(int, region_indexes.strip().split(" ")))
+        region = Region(width, length, n_gifts)
+        regions.append(region)
+        logger.debug(Region(width, length, n_gifts))
+
+    result = 0
+    for region in regions:
+        if will_it_fit(region, pieces):
+            result += 1
+
+    print(result)
+    return f"{result}"

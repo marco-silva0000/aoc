@@ -19,7 +19,7 @@ def parse(data: str):
 
 def get_data():
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    f = open(f"{current_dir}/input.txt")
+    f = open(f"{current_dir}/input1.txt")
     data = f.read()
     f.close()
     return data
@@ -40,13 +40,44 @@ def run_part2(parsed_data):
     print(part2(parsed_data))
 
 
-
 def test_part1():
-    data = """"""
+    data = """0:
+###
+##.
+##.
+
+1:
+###
+##.
+.##
+
+2:
+.##
+###
+##.
+
+3:
+##.
+###
+##.
+
+4:
+###
+#..
+###
+
+5:
+###
+.#.
+###
+
+4x4: 0 0 0 0 2 0
+12x5: 1 0 1 0 2 2
+12x5: 1 0 1 0 3 2"""
     parsed_data = parse(data)
     log.debug(parsed_data)
-    result = part1(parsed_data)
-    assert result == ""
+    result = part1(parsed_data, test=True)
+    assert result == "2"
 
 
 def test_part2():
